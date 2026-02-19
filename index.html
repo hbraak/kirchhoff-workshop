@@ -323,7 +323,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <line x1="200" y1="30" x2="-30" y2="30" class="wire"/>
   <line x1="-30" y1="30" x2="-30" y2="150" class="wire"/>
   <circle cx="-30" cy="175" r="25" fill="none" stroke="var(--accent2)" stroke-width="2"/>
-  <line x1="-30" y1="157" x2="-30" y2="193" stroke="var(--accent2)" stroke-width="2"/>
+  <line x1="-30" y1="150" x2="-30" y2="200" stroke="var(--accent2)" stroke-width="2"/>
   <text x="-30" y="166" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">+</text>
   <text x="-30" y="194" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">−</text>
   <text x="-62" y="180" text-anchor="end" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
@@ -382,6 +382,30 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <div class="formula">∑ I<sub>zu</sub> = ∑ I<sub>ab</sub> &nbsp;(bzw. ∑ I = 0 mit Vorzeichen)</div>
   <h3 style="margin-top:.8rem">2. Maschenregel (KVL)</h3>
   <div class="formula">∑ U = 0 &nbsp;(Umlauf in einer geschlossenen Masche)</div>
+  <p style="margin-top:.8rem">In einer geschlossenen Masche ist die Summe aller Spannungen gleich Null. Dazu legt man eine <strong>Umlaufrichtung</strong> fest (z.B. im Uhrzeigersinn) und geht die Masche Schritt für Schritt ab:</p>
+  
+  <h3 style="margin-top:.8rem">Vorzeichen der Spannung an einem Widerstand</h3>
+  <p>An jedem Widerstand fällt eine Spannung <em>U = R · I</em> ab. Die Richtung des Spannungsabfalls ist <strong>immer gleich</strong> der festgelegten Stromrichtung (von + nach −).</p>
+  <ul>
+    <li>Gehst du <strong>in Stromrichtung</strong> durch den Widerstand → du gehst von + nach −<br>→ die Spannung wird <strong>abgezogen</strong> (Spannungsabfall): <strong>−R·I</strong></li>
+    <li>Gehst du <strong>gegen die Stromrichtung</strong> → du gehst von − nach +<br>→ die Spannung wird <strong>addiert</strong> (Spannungsanstieg): <strong>+R·I</strong></li>
+  </ul>
+  
+  <h3 style="margin-top:.8rem">Vorzeichen der Spannungsquelle</h3>
+  <p>Bei einer Spannungsquelle ist die Polarität fest (+ und − Pol):</p>
+  <ul>
+    <li>Gehst du im Umlauf <strong>von − nach +</strong> (durch die Quelle „aufwärts")<br>→ Spannungsanstieg: <strong>+U₀</strong></li>
+    <li>Gehst du im Umlauf <strong>von + nach −</strong> (durch die Quelle „abwärts")<br>→ Spannungsabfall: <strong>−U₀</strong></li>
+  </ul>
+
+  <h3 style="margin-top:.8rem">Beispiel: Masche M1 (A→B→D→A)</h3>
+  <p>Umlaufrichtung: A → B → D → zurück zur Quelle → A</p>
+  <ol>
+    <li><strong>R₁ (A→B):</strong> Strom I₁ fließt A→B, wir gehen A→B = <em>in Stromrichtung</em> → <strong>−R₁·I₁</strong></li>
+    <li><strong>R₃ (B→D):</strong> Strom I₃ fließt B→D, wir gehen B→D = <em>in Stromrichtung</em> → <strong>−R₃·I₃</strong></li>
+    <li><strong>U₀ (D→A über Quelle):</strong> Wir gehen von − nach + → <strong>+U₀</strong></li>
+  </ol>
+  <div class="formula">+U₀ − R₁·I₁ − R₃·I₃ = 0 &nbsp; ⟺ &nbsp; U₀ = R₁·I₁ + R₃·I₃</div>
 </div>
 
 <div class="warn-box">
@@ -551,7 +575,7 @@ solve({
   <line x1="200" y1="30" x2="-30" y2="30" class="wire"/>
   <line x1="-30" y1="30" x2="-30" y2="150" class="wire"/>
   <circle cx="-30" cy="175" r="25" fill="none" stroke="var(--accent2)" stroke-width="2"/>
-  <line x1="-30" y1="157" x2="-30" y2="193" stroke="var(--accent2)" stroke-width="2"/>
+  <line x1="-30" y1="150" x2="-30" y2="200" stroke="var(--accent2)" stroke-width="2"/>
   <text x="-30" y="166" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">+</text>
   <text x="-30" y="194" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">−</text>
   <text x="-62" y="180" text-anchor="end" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
