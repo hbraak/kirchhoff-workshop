@@ -383,9 +383,10 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 
 <div class="theory">
   <h3>1. Knotenregel (KCL)</h3>
-  <div class="formula">∑ I<sub>zu</sub> = ∑ I<sub>ab</sub> &nbsp;(bzw. ∑ I = 0 mit Vorzeichen)</div>
+  <div class="formula">Die Summe aller zufließenden Ströme = Die Summe aller abfließenden Ströme</div>
+  <p style="text-align:center;color:var(--fg2);font-size:.9rem">Oder mit Vorzeichen: Die Summe aller Ströme an einem Knoten ist Null.</p>
   <h3 style="margin-top:.8rem">2. Maschenregel (KVL)</h3>
-  <div class="formula">∑ U = 0 &nbsp;(Umlauf in einer geschlossenen Masche)</div>
+  <div class="formula">Die Summe aller Spannungen in einer geschlossenen Masche ist Null.</div>
   <p style="margin-top:.8rem">In einer geschlossenen Masche ist die Summe aller Spannungen gleich Null. Dazu legt man eine <strong>Umlaufrichtung</strong> fest (z.B. im Uhrzeigersinn) und geht die Masche Schritt für Schritt ab:</p>
   
   <p>📺 <strong>Beispiel-Video:</strong> <a href="https://www.youtube.com/watch?v=Oq6BBVOJoMA" target="_blank" rel="noopener" style="color:var(--accent2)">Netzwerke mit den Kirchhoffschen Regeln lösen – Beispiel (YouTube)</a></p>
@@ -577,7 +578,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 </div>
 <div class="result" id="sign-quiz-result"></div>
 <div class="result info" id="sign-explain" style="display:none">
-  <strong>Erklärung:</strong> I₅ fließt B→C. Die Masche M3 geht B→C→D→B. Im Abschnitt B→C ist die Umlaufrichtung <em>gleich</em> der Stromrichtung. Also ist der Spannungsabfall +R₅·I₅. Aber die Maschengleichung heißt ∑U=0, d.h. wir subtrahieren Spannungsabfälle:<br>
+  <strong>Erklärung:</strong> I₅ fließt B→C. Die Masche M3 geht B→C→D→B. Im Abschnitt B→C ist die Umlaufrichtung <em>gleich</em> der Stromrichtung. Also ist der Spannungsabfall +R₅·I₅. Aber in der Maschengleichung muss die Summe aller Spannungen Null ergeben, d.h. wir subtrahieren Spannungsabfälle:<br>
   <strong>−R₅·I₅ − R₄·I₄ + R₃·I₃ = 0</strong><br>
   Alternativ: <strong>R₅·I₅ + R₄·I₄ = R₃·I₃</strong><br><br>
   Achtung: Je nach Umlaufrichtung ändert sich das Vorzeichen. Entscheidend ist die <strong>Konsistenz</strong>!
@@ -938,11 +939,11 @@ function checkMeshEq() {
 
 function signQuiz(btn, ok) {
   // The question asks about the sign of R5*I5 in mesh M3 going B→C
-  // I5 goes B→C, mesh goes B→C → same direction → voltage DROP → in ∑U=0 it's −R5·I5
+  // I5 goes B→C, mesh goes B→C → same direction → voltage DROP → it's −R5·I5 (Spannungsabfall)
   // Wait, let me reconsider. If going B→C and current is B→C, voltage drops: U_R5 = -R5*I5 in KVL
   // Actually the convention: going WITH current direction = voltage drop = subtract
-  // So −R₅·I₅ is correct in ∑U=0
-  showResult('sign-quiz-result', ok, ok ? 'Richtig! In der Maschengleichung (∑U=0) wird der Spannungsabfall subtrahiert, wenn Umlauf- und Stromrichtung übereinstimmen.' : 'Nicht ganz – denk daran: Umlaufrichtung = Stromrichtung → Spannungsabfall → negatives Vorzeichen in ∑U=0.');
+  // So −R₅·I₅ is correct
+  showResult('sign-quiz-result', ok, ok ? 'Richtig! Wenn Umlauf- und Stromrichtung übereinstimmen, ist es ein Spannungsabfall — er wird in der Maschengleichung subtrahiert.' : 'Nicht ganz – denk daran: Umlaufrichtung = Stromrichtung → Spannungsabfall → negatives Vorzeichen in der Maschengleichung.');
   document.getElementById('sign-explain').style.display = ok ? 'block' : 'none';
   if(ok) markDone(3);
 }
