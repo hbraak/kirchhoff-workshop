@@ -397,19 +397,20 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
     <!-- Verbraucher (Widerstand) -->
     <div style="text-align:center">
       <svg viewBox="0 0 180 200" style="width:160px">
+        <defs><marker id="arw-vb" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffa726"/></marker></defs>
         <!-- Drähte -->
         <line x1="90" y1="10" x2="90" y2="60" stroke="var(--accent2)" stroke-width="2"/>
         <line x1="90" y1="140" x2="90" y2="190" stroke="var(--accent2)" stroke-width="2"/>
         <!-- Widerstand -->
         <rect x="70" y="60" width="40" height="80" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
         <!-- Strompfeil rechts -->
-        <line x1="130" y1="40" x2="130" y2="80" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
+        <line x1="130" y1="40" x2="130" y2="80" stroke="#ffa726" stroke-width="2" marker-end="url(#arw-vb)"/>
         <text x="145" y="65" fill="#ffa726" font-size="14" font-weight="600">I</text>
         <!-- +/- links -->
         <text x="55" y="70" text-anchor="end" fill="#ffa726" font-size="16" font-weight="700">+</text>
         <text x="55" y="150" text-anchor="end" fill="#ffa726" font-size="16" font-weight="700">−</text>
         <!-- U-Pfeil links -->
-        <line x1="40" y1="75" x2="40" y2="135" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
+        <line x1="40" y1="75" x2="40" y2="135" stroke="#ffa726" stroke-width="2" marker-end="url(#arw-vb)"/>
         <text x="28" y="110" text-anchor="end" fill="#ffa726" font-size="14" font-weight="600">U</text>
       </svg>
       <p style="font-size:.85rem;color:var(--fg2)"><strong>Verbraucher</strong> (Widerstand)<br>Strom und Spannung<br>in <em>gleicher</em> Richtung</p>
