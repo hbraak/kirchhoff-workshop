@@ -398,12 +398,63 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
     <li>Gehst du im Umlauf <strong>von + nach −</strong> (durch die Quelle „abwärts")<br>→ Spannungsabfall: <strong>−U₀</strong></li>
   </ul>
 
-  <h3 style="margin-top:.8rem">Beispiel: Masche M1 (A→B→D→A)</h3>
+  <h3 style="margin-top:.8rem">Einfaches Beispiel: Eine Masche mit Quelle und zwei Widerständen</h3>
+  
+  <svg viewBox="0 0 400 220" style="max-width:400px;margin:1rem auto;display:block">
+    <defs><marker id="arw-ex" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffa726"/></marker></defs>
+    <!-- Drähte -->
+    <line x1="50" y1="30" x2="350" y2="30" stroke="var(--accent2)" stroke-width="2"/>
+    <line x1="350" y1="30" x2="350" y2="190" stroke="var(--accent2)" stroke-width="2"/>
+    <line x1="350" y1="190" x2="50" y2="190" stroke="var(--accent2)" stroke-width="2"/>
+    <line x1="50" y1="190" x2="50" y2="30" stroke="var(--accent2)" stroke-width="2"/>
+    <!-- R1 oben -->
+    <rect x="150" y="20" width="80" height="20" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
+    <text x="190" y="15" text-anchor="middle" fill="#81c784" font-size="14" font-weight="600">R₁</text>
+    <!-- R2 rechts -->
+    <rect x="340" y="80" width="20" height="70" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
+    <text x="375" y="120" text-anchor="start" fill="#81c784" font-size="14" font-weight="600">R₂</text>
+    <!-- Spannungsquelle links -->
+    <circle cx="50" cy="110" r="22" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+    <line x1="50" y1="88" x2="50" y2="132" stroke="var(--accent2)" stroke-width="2"/>
+    <text x="50" y="104" text-anchor="middle" fill="#ffa726" font-size="12" font-weight="700">+</text>
+    <text x="50" y="128" text-anchor="middle" fill="#ffa726" font-size="12" font-weight="700">−</text>
+    <text x="20" y="114" text-anchor="end" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
+    <!-- Strompfeil oben: I fließt nach rechts -->
+    <line x1="90" y1="30" x2="120" y2="30" stroke="#ffa726" stroke-width="2" marker-end="url(#arw-ex)"/>
+    <text x="105" y="22" text-anchor="middle" fill="#ffa726" font-size="12">I</text>
+    <!-- Umlaufrichtung: großer Pfeil im Uhrzeigersinn -->
+    <text x="200" y="125" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">↻ Umlauf</text>
+    <!-- Spannungspfeile an den Bauteilen -->
+    <!-- U_R1: + links, - rechts (in Stromrichtung) -->
+    <text x="148" y="50" text-anchor="end" fill="#81c784" font-size="11">+</text>
+    <text x="233" y="50" text-anchor="start" fill="#81c784" font-size="11">−</text>
+    <text x="190" y="55" text-anchor="middle" fill="#81c784" font-size="11">U<tspan baseline-shift="sub" font-size="9">R1</tspan></text>
+    <!-- U_R2: + oben, - unten (in Stromrichtung nach unten) -->
+    <text x="330" y="82" text-anchor="end" fill="#81c784" font-size="11">+</text>
+    <text x="330" y="155" text-anchor="end" fill="#81c784" font-size="11">−</text>
+    <text x="325" y="120" text-anchor="end" fill="#81c784" font-size="11">U<tspan baseline-shift="sub" font-size="9">R2</tspan></text>
+    <!-- Knoten -->
+    <circle cx="50" cy="30" r="4" fill="var(--accent)"/>
+    <circle cx="350" cy="30" r="4" fill="var(--accent)"/>
+    <circle cx="350" cy="190" r="4" fill="var(--accent)"/>
+    <circle cx="50" cy="190" r="4" fill="var(--accent)"/>
+  </svg>
+
+  <p>Umlauf im Uhrzeigersinn, Start bei der Quelle (unten links):</p>
+  <ol>
+    <li><strong>U₀:</strong> Wir gehen von − nach + durch die Quelle → Spannungs<em>anstieg</em> → <strong style="color:var(--ok)">+U₀</strong></li>
+    <li><strong>R₁:</strong> Wir gehen von + nach − (in Stromrichtung) → Spannungs<em>abfall</em> → <strong style="color:var(--err)">−R₁·I</strong></li>
+    <li><strong>R₂:</strong> Wir gehen von + nach − (in Stromrichtung) → Spannungs<em>abfall</em> → <strong style="color:var(--err)">−R₂·I</strong></li>
+  </ol>
+  <div class="formula">+U₀ − R₁·I − R₂·I = 0 &nbsp; ⟺ &nbsp; U₀ = R₁·I + R₂·I = (R₁+R₂)·I</div>
+  <p style="color:var(--fg2);font-size:.9rem"><em>Das kennt ihr schon — es ist einfach das ohmsche Gesetz für eine Reihenschaltung! Die Maschenregel ist die Verallgemeinerung davon.</em></p>
+
+  <h3 style="margin-top:.8rem">Anwendung auf die Wheatstone-Brücke: Masche M1 (A→B→D→A)</h3>
   <p>Umlaufrichtung: A → B → D → zurück zur Quelle → A</p>
   <ol>
-    <li><strong>R₁ (A→B):</strong> Strom I₁ fließt A→B, wir gehen A→B = <em>in Stromrichtung</em> → <strong>−R₁·I₁</strong></li>
-    <li><strong>R₃ (B→D):</strong> Strom I₃ fließt B→D, wir gehen B→D = <em>in Stromrichtung</em> → <strong>−R₃·I₃</strong></li>
-    <li><strong>U₀ (D→A über Quelle):</strong> Wir gehen von − nach + → <strong>+U₀</strong></li>
+    <li><strong>R₁ (A→B):</strong> Strom I₁ fließt A→B, wir gehen A→B = <em>in Stromrichtung</em> → <strong style="color:var(--err)">−R₁·I₁</strong></li>
+    <li><strong>R₃ (B→D):</strong> Strom I₃ fließt B→D, wir gehen B→D = <em>in Stromrichtung</em> → <strong style="color:var(--err)">−R₃·I₃</strong></li>
+    <li><strong>U₀ (D→A über Quelle):</strong> Wir gehen von − nach + → <strong style="color:var(--ok)">+U₀</strong></li>
   </ol>
   <div class="formula">+U₀ − R₁·I₁ − R₃·I₃ = 0 &nbsp; ⟺ &nbsp; U₀ = R₁·I₁ + R₃·I₃</div>
 </div>
