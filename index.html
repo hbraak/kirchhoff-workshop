@@ -508,14 +508,14 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0">
   <button onclick="checkEqSystem()">Gleichungen prüfen</button>
   <button onclick="solveSystem()" class="secondary">Lösen (Gauß)</button>
-  <button onclick="showCAS()" class="secondary">ClassPad Syntax</button>
+  <button onclick="showCAS()" class="secondary">CAS Syntax anzeigen</button>
 </div>
 
 <div class="result" id="eq-check-result"></div>
 <div class="result" id="eq-solve-result"></div>
 
 <div class="cas-box" style="display:none" id="cas-box">
-  <div class="cas-label">📱 ClassPad CAS Eingabe:</div>
+  <div class="cas-label">📱 ClassPad Eingabe:</div>
 solve({
   I1-I3-I5=0,
   I2-I4+I5=0,
@@ -523,6 +523,23 @@ solve({
   220*I2+470*I4=12,
   -330*I3+470*I4+150*I5=0
 },{I1,I2,I3,I4,I5})
+</div>
+
+<div class="cas-box" style="display:none" id="cas-box-nspire">
+  <div class="cas-label">🖩 TI-Nspire CX Eingabe:</div>
+<strong>Variante 1: solve()</strong>
+solve(i1-i3-i5=0 and i2-i4+i5=0 and 100·i1+330·i3=12 and 220·i2+470·i4=12 and -330·i3+470·i4+150·i5=0, {i1,i2,i3,i4,i5})
+
+<strong>Variante 2: Menü → Algebra → Gleichungssystem lösen</strong>
+Anzahl Gleichungen: 5
+  i1-i3-i5=0
+  i2-i4+i5=0
+  100·i1+330·i3=12
+  220·i2+470·i4=12
+  -330·i3+470·i4+150·i5=0
+Variablen: i1,i2,i3,i4,i5
+
+<em>Tipp: · über die Multiplikationstaste, Variablen klein schreiben</em>
 </div>
 </section>
 
@@ -615,8 +632,12 @@ solve({
 </div>
 
 <div class="cas-box" id="calc-cas">
-  <div class="cas-label">📱 ClassPad CAS:</div>
+  <div class="cas-label">📱 ClassPad:</div>
   <span id="calc-cas-text"></span>
+</div>
+<div class="cas-box" id="calc-cas-nspire">
+  <div class="cas-label">🖩 TI-Nspire CX:</div>
+  <span id="calc-cas-nspire-text"></span>
 </div>
 </section>
 </main>
@@ -899,7 +920,10 @@ function solveSystem() {
 
 function showCAS() {
   const box = document.getElementById('cas-box');
-  box.style.display = box.style.display==='none' ? 'block' : 'none';
+  const box2 = document.getElementById('cas-box-nspire');
+  const show = box.style.display==='none' ? 'block' : 'none';
+  box.style.display = show;
+  box2.style.display = show;
 }
 
 // ===== CH6: FREE CALCULATOR =====
@@ -968,6 +992,9 @@ function calcAll() {
   ${R2}*I2+${R4}*I4=${U0},
   -${R3}*I3+${R4}*I4+${R5}*I5=0
 },{I1,I2,I3,I4,I5})`;
+
+  document.getElementById('calc-cas-nspire-text').textContent =
+`solve(i1-i3-i5=0 and i2-i4+i5=0 and ${R1}·i1+${R3}·i3=${U0} and ${R2}·i2+${R4}·i4=${U0} and -${R3}·i3+${R4}·i4+${R5}·i5=0, {i1,i2,i3,i4,i5})`;
 
   markDone(5);
 }
