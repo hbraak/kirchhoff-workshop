@@ -290,35 +290,35 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <line x1="106" y1="128" x2="60" y2="175" class="wire"/>
   <text x="108" y="84" text-anchor="end" fill="#81c784" font-weight="600" font-size="15">R₁</text>
   <line x1="172" y1="59" x2="164" y2="68" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
-  <text x="158" y="50" text-anchor="middle" fill="#ffa726" font-size="12">I₁</text>
+  <text x="145" y="52" text-anchor="end" fill="#ffa726" font-size="12">I₁</text>
   <!-- R2: A to C -->
   <line x1="200" y1="30" x2="246" y2="77" class="wire"/>
   <polygon points="238,84 288,135 302,121 253,70" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
   <line x1="295" y1="128" x2="340" y2="175" class="wire"/>
   <text x="292" y="84" text-anchor="start" fill="#81c784" font-weight="600" font-size="15">R₂</text>
   <line x1="228" y1="59" x2="236" y2="68" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
-  <text x="242" y="50" text-anchor="middle" fill="#ffa726" font-size="12">I₂</text>
+  <text x="255" y="52" text-anchor="start" fill="#ffa726" font-size="12">I₂</text>
   <!-- R3: B to D -->
   <line x1="60" y1="175" x2="106" y2="222" class="wire"/>
   <polygon points="98,229 147,280 162,266 113,215" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
   <line x1="155" y1="273" x2="200" y2="320" class="wire"/>
   <text x="108" y="266" text-anchor="end" fill="#81c784" font-weight="600" font-size="15">R₃</text>
   <line x1="88" y1="204" x2="96" y2="213" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
-  <text x="73" y="214" text-anchor="middle" fill="#ffa726" font-size="12">I₃</text>
+  <text x="62" y="210" text-anchor="end" fill="#ffa726" font-size="12">I₃</text>
   <!-- R4: C to D -->
   <line x1="340" y1="175" x2="295" y2="222" class="wire"/>
   <polygon points="287,215 238,266 253,280 302,229" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
   <line x1="246" y1="273" x2="200" y2="320" class="wire"/>
   <text x="292" y="266" text-anchor="start" fill="#81c784" font-weight="600" font-size="15">R₄</text>
   <line x1="312" y1="204" x2="304" y2="213" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
-  <text x="327" y="214" text-anchor="middle" fill="#ffa726" font-size="12">I₄</text>
+  <text x="338" y="210" text-anchor="start" fill="#ffa726" font-size="12">I₄</text>
   <!-- R5: B to C (bridge) -->
   <line x1="60" y1="175" x2="151" y2="175" class="wire"/>
   <rect x="151" y="165" width="98" height="20" fill="none" stroke="var(--warn)" stroke-width="2.5"/>
   <line x1="249" y1="175" x2="340" y2="175" class="wire"/>
   <text x="200" y="158" text-anchor="middle" fill="#ffa726" font-weight="700" font-size="15">R₅</text>
   <line x1="108" y1="175" x2="120" y2="175" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
-  <text x="114" y="165" text-anchor="middle" fill="#ffa726" font-size="12">I₅</text>
+  <text x="100" y="168" text-anchor="end" fill="#ffa726" font-size="12">I₅</text>
   <!-- Nodes -->
   <circle cx="200" cy="30" r="5" class="node-dot"/>
   <text x="200" y="15" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="16">A</text>
@@ -328,7 +328,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <text x="362" y="180" text-anchor="start" fill="#4caf50" font-weight="700" font-size="16">C</text>
   <circle cx="200" cy="320" r="5" class="node-dot"/>
   <text x="200" y="342" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="16">D</text>
-  <text x="200" y="8" text-anchor="middle" fill="#ffa726" font-size="13">+ U₀ −</text>
+  <text x="168" y="24" text-anchor="end" fill="#ffa726" font-size="13">U₀</text>
 </svg>
 
 <h3>Warum geht Reihe/Parallel nicht?</h3>
@@ -509,35 +509,35 @@ solve({
   <line x1="106" y1="128" x2="60" y2="175" class="wire"/>
   <text x="108" y="84" text-anchor="end" fill="#81c784" font-weight="600" font-size="15" id="calc-r1-label">R₁</text>
   <line x1="172" y1="59" x2="164" y2="68" stroke="#ffa726" stroke-width="2" marker-end="url(#arw2)"/>
-  <text x="158" y="50" text-anchor="middle" fill="#ffa726" font-size="12" id="calc-i1-svg">I₁</text>
+  <text x="145" y="52" text-anchor="end" fill="#ffa726" font-size="12" id="calc-i1-svg">I₁</text>
   <!-- R2: A to C -->
   <line x1="200" y1="30" x2="246" y2="77" class="wire"/>
   <polygon points="238,84 288,135 302,121 253,70" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
   <line x1="295" y1="128" x2="340" y2="175" class="wire"/>
   <text x="292" y="84" text-anchor="start" fill="#81c784" font-weight="600" font-size="15" id="calc-r2-label">R₂</text>
   <line x1="228" y1="59" x2="236" y2="68" stroke="#ffa726" stroke-width="2" marker-end="url(#arw2)"/>
-  <text x="242" y="50" text-anchor="middle" fill="#ffa726" font-size="12" id="calc-i2-svg">I₂</text>
+  <text x="255" y="52" text-anchor="start" fill="#ffa726" font-size="12" id="calc-i2-svg">I₂</text>
   <!-- R3: B to D -->
   <line x1="60" y1="175" x2="106" y2="222" class="wire"/>
   <polygon points="98,229 147,280 162,266 113,215" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
   <line x1="155" y1="273" x2="200" y2="320" class="wire"/>
   <text x="108" y="266" text-anchor="end" fill="#81c784" font-weight="600" font-size="15" id="calc-r3-label">R₃</text>
   <line x1="88" y1="204" x2="96" y2="213" stroke="#ffa726" stroke-width="2" marker-end="url(#arw2)"/>
-  <text x="73" y="214" text-anchor="middle" fill="#ffa726" font-size="12" id="calc-i3-svg">I₃</text>
+  <text x="62" y="210" text-anchor="end" fill="#ffa726" font-size="12" id="calc-i3-svg">I₃</text>
   <!-- R4: C to D -->
   <line x1="340" y1="175" x2="295" y2="222" class="wire"/>
   <polygon points="287,215 238,266 253,280 302,229" fill="none" stroke="var(--accent2)" stroke-width="2.5"/>
   <line x1="246" y1="273" x2="200" y2="320" class="wire"/>
   <text x="292" y="266" text-anchor="start" fill="#81c784" font-weight="600" font-size="15" id="calc-r4-label">R₄</text>
   <line x1="312" y1="204" x2="304" y2="213" stroke="#ffa726" stroke-width="2" marker-end="url(#arw2)"/>
-  <text x="327" y="214" text-anchor="middle" fill="#ffa726" font-size="12" id="calc-i4-svg">I₄</text>
+  <text x="338" y="210" text-anchor="start" fill="#ffa726" font-size="12" id="calc-i4-svg">I₄</text>
   <!-- R5: B to C (bridge) -->
   <line x1="60" y1="175" x2="151" y2="175" class="wire"/>
   <rect x="151" y="165" width="98" height="20" fill="none" stroke="var(--warn)" stroke-width="2.5"/>
   <line x1="249" y1="175" x2="340" y2="175" class="wire"/>
   <text x="200" y="158" text-anchor="middle" fill="#ffa726" font-weight="700" font-size="15" id="calc-r5-label">R₅</text>
   <line x1="108" y1="175" x2="120" y2="175" stroke="#ffa726" stroke-width="2" marker-end="url(#arw2)"/>
-  <text x="114" y="165" text-anchor="middle" fill="#ffa726" font-size="12" id="calc-i5-svg">I₅</text>
+  <text x="100" y="168" text-anchor="end" fill="#ffa726" font-size="12" id="calc-i5-svg">I₅</text>
   <!-- Nodes -->
   <circle cx="200" cy="30" r="5" class="node-dot"/>
   <text x="200" y="15" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="16">A</text>
@@ -547,7 +547,7 @@ solve({
   <text x="362" y="180" text-anchor="start" fill="#4caf50" font-weight="700" font-size="16">C</text>
   <circle cx="200" cy="320" r="5" class="node-dot"/>
   <text x="200" y="342" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="16">D</text>
-  <text x="200" y="8" text-anchor="middle" fill="#ffa726" font-size="13">+ U₀ −</text>
+  <text x="168" y="24" text-anchor="end" fill="#ffa726" font-size="13">U₀</text>
 </svg>
 
 <div class="input-group">
