@@ -282,7 +282,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <div class="formula">Diese Schaltung lässt sich <strong>NICHT</strong> durch Reihen-/Parallelschaltung vereinfachen!</div>
 </div>
 
-<svg class="circuit" viewBox="-15 0 430 360" id="svg-wheatstone">
+<svg class="circuit" viewBox="-90 0 500 360" id="svg-wheatstone">
   <defs><marker id="arw" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffa726"/></marker></defs>
   <!-- R1: A to B -->
   <line x1="200" y1="30" x2="155" y2="77" class="wire"/>
@@ -320,14 +320,15 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <line x1="108" y1="175" x2="120" y2="175" stroke="#ffa726" stroke-width="2" marker-end="url(#arw)"/>
   <text x="100" y="168" text-anchor="end" fill="#ffa726" font-size="12">I₅</text>
   <!-- Spannungsquelle U₀: A links runter nach D -->
-  <line x1="200" y1="30" x2="20" y2="30" class="wire"/>
-  <line x1="20" y1="30" x2="20" y2="145" class="wire"/>
-  <circle cx="20" cy="175" r="30" fill="none" stroke="var(--accent2)" stroke-width="2"/>
-  <text x="20" y="170" text-anchor="middle" fill="#ffa726" font-size="16" font-weight="600">+</text>
-  <text x="20" y="190" text-anchor="middle" fill="#ffa726" font-size="16" font-weight="600">−</text>
-  <text x="48" y="180" text-anchor="start" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
-  <line x1="20" y1="205" x2="20" y2="320" class="wire"/>
-  <line x1="20" y1="320" x2="200" y2="320" class="wire"/>
+  <line x1="200" y1="30" x2="-30" y2="30" class="wire"/>
+  <line x1="-30" y1="30" x2="-30" y2="150" class="wire"/>
+  <circle cx="-30" cy="175" r="25" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <line x1="-30" y1="157" x2="-30" y2="193" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="-30" y="166" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">+</text>
+  <text x="-30" y="194" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">−</text>
+  <text x="-62" y="180" text-anchor="end" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
+  <line x1="-30" y1="200" x2="-30" y2="320" class="wire"/>
+  <line x1="-30" y1="320" x2="200" y2="320" class="wire"/>
   <!-- Nodes -->
   <circle cx="200" cy="30" r="5" class="node-dot"/>
   <text x="200" y="15" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="16">A</text>
@@ -509,7 +510,7 @@ solve({
   <p>Gib eigene Werte ein und berechne sofort alle Ströme, Spannungen und R<sub>ges</sub> der Wheatstone-Brücke.</p>
 </div>
 
-<svg class="circuit" viewBox="-15 0 430 360" id="svg-calc">
+<svg class="circuit" viewBox="-90 0 500 360" id="svg-calc">
   <defs><marker id="arw2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffa726"/></marker></defs>
   <!-- R1: A to B -->
   <line x1="200" y1="30" x2="155" y2="77" class="wire"/>
@@ -547,14 +548,15 @@ solve({
   <line x1="108" y1="175" x2="120" y2="175" stroke="#ffa726" stroke-width="2" marker-end="url(#arw2)"/>
   <text x="100" y="168" text-anchor="end" fill="#ffa726" font-size="12" id="calc-i5-svg">I₅</text>
   <!-- Spannungsquelle U₀: A links runter nach D -->
-  <line x1="200" y1="30" x2="20" y2="30" class="wire"/>
-  <line x1="20" y1="30" x2="20" y2="145" class="wire"/>
-  <circle cx="20" cy="175" r="30" fill="none" stroke="var(--accent2)" stroke-width="2"/>
-  <text x="20" y="170" text-anchor="middle" fill="#ffa726" font-size="16" font-weight="600">+</text>
-  <text x="20" y="190" text-anchor="middle" fill="#ffa726" font-size="16" font-weight="600">−</text>
-  <text x="48" y="180" text-anchor="start" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
-  <line x1="20" y1="205" x2="20" y2="320" class="wire"/>
-  <line x1="20" y1="320" x2="200" y2="320" class="wire"/>
+  <line x1="200" y1="30" x2="-30" y2="30" class="wire"/>
+  <line x1="-30" y1="30" x2="-30" y2="150" class="wire"/>
+  <circle cx="-30" cy="175" r="25" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <line x1="-30" y1="157" x2="-30" y2="193" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="-30" y="166" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">+</text>
+  <text x="-30" y="194" text-anchor="middle" fill="#ffa726" font-size="14" font-weight="700">−</text>
+  <text x="-62" y="180" text-anchor="end" fill="#ffa726" font-size="13" font-weight="600">U₀</text>
+  <line x1="-30" y1="200" x2="-30" y2="320" class="wire"/>
+  <line x1="-30" y1="320" x2="200" y2="320" class="wire"/>
   <!-- Nodes -->
   <circle cx="200" cy="30" r="5" class="node-dot"/>
   <text x="200" y="15" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="16">A</text>
