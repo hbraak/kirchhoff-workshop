@@ -147,17 +147,17 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <line x1="340" y1="110" x2="410" y2="110" class="wire"/>
   <!-- R1 -->
   <line x1="100" y1="40" x2="160" y2="40" class="wire"/>
-  <polyline points="160,40 170,25 190,55 210,25 230,55 250,25 260,40" class="resistor"/>
+  <g class="resistor-iec"><line x1="160.0" y1="40.0" x2="180.0" y2="40.0" stroke="currentColor" stroke-width="2"/><polygon points="180.0,48.0 240.0,48.0 240.0,32.0 180.0,32.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="240.0" y1="40.0" x2="260.0" y2="40.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="260" y1="40" x2="340" y2="40" class="wire"/>
   <text x="210" y="18" text-anchor="middle" id="par-r1-label">R₁ = 100 Ω</text>
   <!-- R2 -->
   <line x1="100" y1="110" x2="160" y2="110" class="wire"/>
-  <polyline points="160,110 170,95 190,125 210,95 230,125 250,95 260,110" class="resistor"/>
+  <g class="resistor-iec"><line x1="160.0" y1="110.0" x2="180.0" y2="110.0" stroke="currentColor" stroke-width="2"/><polygon points="180.0,118.0 240.0,118.0 240.0,102.0 180.0,102.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="240.0" y1="110.0" x2="260.0" y2="110.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="260" y1="110" x2="340" y2="110" class="wire"/>
   <text x="210" y="145" text-anchor="middle" id="par-r2-label">R₂ = 220 Ω</text>
   <!-- R3 -->
   <line x1="100" y1="180" x2="160" y2="180" class="wire"/>
-  <polyline points="160,180 170,165 190,195 210,165 230,195 250,165 260,180" class="resistor"/>
+  <g class="resistor-iec"><line x1="160.0" y1="180.0" x2="180.0" y2="180.0" stroke="currentColor" stroke-width="2"/><polygon points="180.0,188.0 240.0,188.0 240.0,172.0 180.0,172.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="240.0" y1="180.0" x2="260.0" y2="180.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="260" y1="180" x2="340" y2="180" class="wire"/>
   <text x="210" y="210" text-anchor="middle" id="par-r3-label">R₃ = 330 Ω</text>
   <!-- Flow lines -->
@@ -219,19 +219,19 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <!-- Source -->
   <line x1="30" y1="100" x2="80" y2="100" class="wire"/>
   <!-- R1 in series -->
-  <polyline points="80,100 90,85 110,115 130,85 150,115 160,100" class="resistor" id="mix-r1-svg"/>
+  <g class="resistor-iec" id="mix-r1-svg"><line x1="80.0" y1="100.0" x2="96.0" y2="100.0" stroke="currentColor" stroke-width="2"/><polygon points="96.0,108.0 144.0,108.0 144.0,92.0 96.0,92.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="144.0" y1="100.0" x2="160.0" y2="100.0" stroke="currentColor" stroke-width="2"/></g>
   <text x="120" y="75" text-anchor="middle" id="mix-r1-text">R₁ = 100 Ω</text>
   <line x1="160" y1="100" x2="200" y2="100" class="wire"/>
   <!-- Split -->
   <line x1="200" y1="50" x2="200" y2="150" class="wire"/>
   <!-- R2 top -->
   <line x1="200" y1="50" x2="240" y2="50" class="wire"/>
-  <polyline points="240,50 250,35 270,65 290,35 310,65 320,50" class="resistor" id="mix-r2-svg"/>
+  <g class="resistor-iec" id="mix-r2-svg"><line x1="240.0" y1="50.0" x2="256.0" y2="50.0" stroke="currentColor" stroke-width="2"/><polygon points="256.0,58.0 304.0,58.0 304.0,42.0 256.0,42.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="304.0" y1="50.0" x2="320.0" y2="50.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="320" y1="50" x2="380" y2="50" class="wire"/>
   <text x="280" y="30" text-anchor="middle" id="mix-r2-text">R₂ = 220 Ω</text>
   <!-- R3 bottom -->
   <line x1="200" y1="150" x2="240" y2="150" class="wire"/>
-  <polyline points="240,150 250,135 270,165 290,135 310,165 320,150" class="resistor" id="mix-r3-svg"/>
+  <g class="resistor-iec" id="mix-r3-svg"><line x1="240.0" y1="150.0" x2="256.0" y2="150.0" stroke="currentColor" stroke-width="2"/><polygon points="256.0,158.0 304.0,158.0 304.0,142.0 256.0,142.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="304.0" y1="150.0" x2="320.0" y2="150.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="320" y1="150" x2="380" y2="150" class="wire"/>
   <text x="280" y="175" text-anchor="middle" id="mix-r3-text">R₃ = 330 Ω</text>
   <!-- Merge -->
@@ -287,27 +287,27 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <!-- A = 200,30  B = 60,175  C = 340,175  D = 200,320 -->
   <!-- R1: A→B -->
   <line x1="200" y1="30" x2="155" y2="75" class="wire"/>
-  <polyline points="155,75 138,78 142,95 125,98 129,115 112,118 116,135" class="resistor"/>
+  <g class="resistor-iec"><line x1="155.0" y1="75.0" x2="147.2" y2="87.0" stroke="currentColor" stroke-width="2"/><polygon points="140.5,82.6 117.1,118.6 130.5,127.4 153.9,91.4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="123.8" y1="123.0" x2="116.0" y2="135.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="116" y1="135" x2="60" y2="175" class="wire"/>
   <text x="100" y="85" text-anchor="end" fill="#81c784" font-weight="600">R₁</text>
   <!-- R2: A→C -->
   <line x1="200" y1="30" x2="245" y2="75" class="wire"/>
-  <polyline points="245,75 262,78 258,95 275,98 271,115 288,118 284,135" class="resistor"/>
+  <g class="resistor-iec"><line x1="245.0" y1="75.0" x2="252.8" y2="87.0" stroke="currentColor" stroke-width="2"/><polygon points="246.1,91.4 269.5,127.4 282.9,118.6 259.5,82.6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="276.2" y1="123.0" x2="284.0" y2="135.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="284" y1="135" x2="340" y2="175" class="wire"/>
   <text x="300" y="85" text-anchor="start" fill="#81c784" font-weight="600">R₂</text>
   <!-- R3: B→D -->
   <line x1="60" y1="175" x2="116" y2="215" class="wire"/>
-  <polyline points="116,215 112,232 129,235 125,252 142,255 138,272 155,275" class="resistor"/>
+  <g class="resistor-iec"><line x1="116.0" y1="215.0" x2="123.8" y2="227.0" stroke="currentColor" stroke-width="2"/><polygon points="117.1,231.4 140.5,267.4 153.9,258.6 130.5,222.6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="147.2" y1="263.0" x2="155.0" y2="275.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="155" y1="275" x2="200" y2="320" class="wire"/>
   <text x="100" y="265" text-anchor="end" fill="#81c784" font-weight="600">R₃</text>
   <!-- R4: C→D -->
   <line x1="340" y1="175" x2="284" y2="215" class="wire"/>
-  <polyline points="284,215 288,232 271,235 275,252 258,255 262,272 245,275" class="resistor"/>
+  <g class="resistor-iec"><line x1="284.0" y1="215.0" x2="276.2" y2="227.0" stroke="currentColor" stroke-width="2"/><polygon points="269.5,222.6 246.1,258.6 259.5,267.4 282.9,231.4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="252.8" y1="263.0" x2="245.0" y2="275.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="245" y1="275" x2="200" y2="320" class="wire"/>
   <text x="300" y="265" text-anchor="start" fill="#81c784" font-weight="600">R₄</text>
   <!-- R5: B→C (bridge) -->
   <line x1="60" y1="175" x2="130" y2="175" class="wire"/>
-  <polyline points="130,175 140,160 160,190 180,160 200,190 220,160 240,190 250,175" class="resistor" style="stroke:var(--warn)"/>
+  <g class="resistor-iec" style="stroke:var(--warn)"><line x1="130.0" y1="175.0" x2="154.0" y2="175.0" stroke="currentColor" stroke-width="2"/><polygon points="154.0,183.0 226.0,183.0 226.0,167.0 154.0,167.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="226.0" y1="175.0" x2="250.0" y2="175.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="250" y1="175" x2="340" y2="175" class="wire"/>
   <text x="200" y="205" text-anchor="middle" fill="#ffa726" font-weight="700">R₅</text>
   <!-- Nodes -->
@@ -498,27 +498,27 @@ solve({
 <svg class="circuit" viewBox="0 0 400 350" id="svg-calc">
   <!-- Same diamond as ch2 but with live values -->
   <line x1="200" y1="30" x2="155" y2="75" class="wire"/>
-  <polyline points="155,75 138,78 142,95 125,98 129,115 112,118 116,135" class="resistor"/>
+  <g class="resistor-iec"><line x1="155.0" y1="75.0" x2="147.2" y2="87.0" stroke="currentColor" stroke-width="2"/><polygon points="140.5,82.6 117.1,118.6 130.5,127.4 153.9,91.4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="123.8" y1="123.0" x2="116.0" y2="135.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="116" y1="135" x2="60" y2="175" class="wire"/>
   <text x="90" y="85" text-anchor="end" id="calc-r1-label" fill="#81c784" font-weight="600">R₁</text>
 
   <line x1="200" y1="30" x2="245" y2="75" class="wire"/>
-  <polyline points="245,75 262,78 258,95 275,98 271,115 288,118 284,135" class="resistor"/>
+  <g class="resistor-iec"><line x1="245.0" y1="75.0" x2="252.8" y2="87.0" stroke="currentColor" stroke-width="2"/><polygon points="246.1,91.4 269.5,127.4 282.9,118.6 259.5,82.6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="276.2" y1="123.0" x2="284.0" y2="135.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="284" y1="135" x2="340" y2="175" class="wire"/>
   <text x="310" y="85" text-anchor="start" id="calc-r2-label" fill="#81c784" font-weight="600">R₂</text>
 
   <line x1="60" y1="175" x2="116" y2="215" class="wire"/>
-  <polyline points="116,215 112,232 129,235 125,252 142,255 138,272 155,275" class="resistor"/>
+  <g class="resistor-iec"><line x1="116.0" y1="215.0" x2="123.8" y2="227.0" stroke="currentColor" stroke-width="2"/><polygon points="117.1,231.4 140.5,267.4 153.9,258.6 130.5,222.6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="147.2" y1="263.0" x2="155.0" y2="275.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="155" y1="275" x2="200" y2="320" class="wire"/>
   <text x="90" y="265" text-anchor="end" id="calc-r3-label" fill="#81c784" font-weight="600">R₃</text>
 
   <line x1="340" y1="175" x2="284" y2="215" class="wire"/>
-  <polyline points="284,215 288,232 271,235 275,252 258,255 262,272 245,275" class="resistor"/>
+  <g class="resistor-iec"><line x1="284.0" y1="215.0" x2="276.2" y2="227.0" stroke="currentColor" stroke-width="2"/><polygon points="269.5,222.6 246.1,258.6 259.5,267.4 282.9,231.4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="252.8" y1="263.0" x2="245.0" y2="275.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="245" y1="275" x2="200" y2="320" class="wire"/>
   <text x="310" y="265" text-anchor="start" id="calc-r4-label" fill="#81c784" font-weight="600">R₄</text>
 
   <line x1="60" y1="175" x2="130" y2="175" class="wire"/>
-  <polyline points="130,175 140,160 160,190 180,160 200,190 220,160 240,190 250,175" class="resistor" style="stroke:var(--warn)"/>
+  <g class="resistor-iec" style="stroke:var(--warn)"><line x1="130.0" y1="175.0" x2="154.0" y2="175.0" stroke="currentColor" stroke-width="2"/><polygon points="154.0,183.0 226.0,183.0 226.0,167.0 154.0,167.0" fill="none" stroke="currentColor" stroke-width="2"/><line x1="226.0" y1="175.0" x2="250.0" y2="175.0" stroke="currentColor" stroke-width="2"/></g>
   <line x1="250" y1="175" x2="340" y2="175" class="wire"/>
   <text x="200" y="205" text-anchor="middle" id="calc-r5-label" fill="#ffa726" font-weight="700">R₅</text>
 
