@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Widerstandsnetzwerke – Interaktiver Workshop</title>
+<style>
+:root {
+  --bg: #0d1b0e; --bg2: #142116; --bg3: #1a2e1c;
+  --fg: #e8f0e8; --fg2: #a8c4a8; --accent: #4caf50;
+  --accent2: #81c784; --err: #ef5350; --ok: #66bb6a;
+  --warn: #ffa726; --radius: 8px; --shadow: 0 2px 8px #0004;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background:var(--bg); color:var(--fg); min-height:100vh; display:flex; font-size:18px; line-height:1.6; }
+/* NAV */
+nav { width:260px; min-height:100vh; background:var(--bg2); border-right:2px solid var(--accent); padding:1rem 0; position:fixed; top:0; left:0; z-index:100; display:flex; flex-direction:column; transition:transform .3s; }
+nav.closed { transform:translateX(-260px); }
+.nav-toggle { display:none; position:fixed; top:.5rem; left:.5rem; z-index:200; background:var(--accent); color:#fff; border:none; border-radius:var(--radius); width:44px; height:44px; font-size:1.5rem; cursor:pointer; }
+nav h1 { font-size:1.1rem; padding:.5rem 1rem; color:var(--accent2); border-bottom:1px solid var(--bg3); margin-bottom:.5rem; }
+nav a { display:block; padding:.6rem 1rem; color:var(--fg2); text-decoration:none; font-size:.95rem; border-left:3px solid transparent; transition:all .2s; }
+nav a:hover, nav a.active { background:var(--bg3); color:var(--accent2); border-left-color:var(--accent); }
+nav a .ch-num { display:inline-block; width:1.8em; font-weight:700; color:var(--accent); }
+nav a .ch-check { float:right; opacity:0; transition:opacity .2s; }
+nav a .ch-check.done { opacity:1; }
+.progress-wrap { margin-top:auto; padding:.8rem 1rem; }
+.progress-bar { height:6px; background:var(--bg); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--accent); width:0%; transition:width .5s; }
+.progress-label { font-size:.75rem; color:var(--fg2); margin-top:.3rem; text-align:center; }
+/* MAIN */
+main { margin-left:260px; flex:1; padding:2rem; max-width:960px; }
+section { display:none; }
+section.active { display:block; animation: fadeIn .3s; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+h2 { color:var(--accent2); font-size:1.6rem; margin-bottom:1rem; border-bottom:2px solid var(--accent); padding-bottom:.4rem; }
+h3 { color:var(--accent); margin:1.2rem 0 .5rem; font-size:1.15rem; }
+p, li { margin-bottom:.5rem; }
+ul { padding-left:1.5rem; }
+/* COMPONENTS */
+.theory { background:var(--bg3); border-left:4px solid var(--accent); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin:1rem 0; }
+.theory .formula { font-size:1.3rem; text-align:center; padding:.5rem; color:var(--accent2); font-weight:600; }
+.warn-box { background:#2a1a00; border-left:4px solid var(--warn); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin:1rem 0; color:#ffe0b2; }
+.input-group { display:flex; flex-wrap:wrap; gap:.8rem; align-items:center; margin:.8rem 0; }
+.input-group label { min-width:80px; font-weight:600; color:var(--fg2); }
+.input-group input[type=number], .input-group input[type=text] { width:100px; padding:.4rem .6rem; background:var(--bg); border:1px solid var(--fg2); color:var(--fg); border-radius:var(--radius); font-size:1rem; text-align:right; }
+.input-group input:focus { border-color:var(--accent); outline:none; }
+.input-group .unit { color:var(--fg2); font-size:.9rem; margin-left:-.4rem; }
+.slider-group { display:flex; align-items:center; gap:.6rem; margin:.4rem 0; flex-wrap:wrap; }
+.slider-group label { min-width:60px; font-weight:600; color:var(--fg2); }
+.slider-group input[type=range] { flex:1; min-width:120px; accent-color:var(--accent); }
+.slider-group .val { min-width:70px; text-align:right; font-family:monospace; color:var(--accent2); }
+button { padding:.5rem 1.2rem; background:var(--accent); color:#fff; border:none; border-radius:var(--radius); cursor:pointer; font-size:1rem; font-weight:600; transition:background .2s; }
+button:hover { background:var(--accent2); color:var(--bg); }
+button.secondary { background:var(--bg3); color:var(--fg2); border:1px solid var(--fg2); }
+button.secondary:hover { border-color:var(--accent); color:var(--accent); }
+.result { margin:1rem 0; padding:.8rem 1rem; border-radius:var(--radius); font-family:monospace; font-size:1rem; display:none; }
+.result.show { display:block; }
+.result.ok { background:#1b3a1b; border:1px solid var(--ok); color:var(--ok); }
+.result.err { background:#3a1b1b; border:1px solid var(--err); color:var(--err); }
+.result.info { background:var(--bg3); border:1px solid var(--fg2); color:var(--fg); }
+.result-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:.5rem; }
+.result-grid .item { background:var(--bg2); padding:.5rem .8rem; border-radius:var(--radius); }
+.result-grid .item .lbl { font-size:.8rem; color:var(--fg2); }
+.result-grid .item .val { font-size:1.1rem; color:var(--accent2); font-family:monospace; }
+/* SVG */
+svg.circuit { width:100%; max-width:500px; display:block; margin:1rem auto; }
+svg.circuit text { fill:var(--fg); font-family:'Segoe UI',system-ui,sans-serif; font-size:14px; }
+svg.circuit .wire { stroke:var(--fg2); stroke-width:2; fill:none; }
+svg.circuit .resistor { stroke:var(--accent2); stroke-width:2.5; fill:none; }
+svg.circuit .source { stroke:var(--warn); stroke-width:2.5; fill:none; }
+svg.circuit .node-dot { fill:var(--accent); }
+svg.circuit .arrow { fill:var(--accent); stroke:none; }
+svg.circuit .current-dot { fill:var(--warn); }
+/* flow animation */
+@keyframes flowRight { from{stroke-dashoffset:20} to{stroke-dashoffset:0} }
+@keyframes flowLeft { from{stroke-dashoffset:-20} to{stroke-dashoffset:0} }
+svg.circuit .flow { stroke-dasharray:4 16; stroke-width:3; stroke:var(--warn); opacity:.6; animation: flowRight 1s linear infinite; }
+/* TABLES */
+table.eq-table { border-collapse:collapse; margin:.8rem 0; width:100%; }
+table.eq-table th, table.eq-table td { border:1px solid var(--bg3); padding:.4rem .6rem; text-align:center; }
+table.eq-table th { background:var(--bg3); color:var(--accent2); font-weight:600; }
+table.eq-table input { width:70px; padding:.3rem; background:var(--bg); border:1px solid var(--fg2); color:var(--fg); border-radius:4px; text-align:center; font-size:.95rem; }
+table.eq-table input:focus { border-color:var(--accent); outline:none; }
+table.eq-table input.ok { border-color:var(--ok); background:#1b3a1b; }
+table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
+/* interactive step */
+.step-box { background:var(--bg2); border:1px solid var(--bg3); border-radius:var(--radius); padding:1rem; margin:.8rem 0; }
+.step-box.current { border-color:var(--accent); }
+.step-box h4 { color:var(--accent); margin-bottom:.4rem; }
+.choice-btns { display:flex; flex-wrap:wrap; gap:.5rem; margin:.5rem 0; }
+.choice-btns button { font-size:.9rem; padding:.4rem .8rem; }
+.choice-btns button.selected { background:var(--accent2); color:var(--bg); }
+/* highlight for SVG interactive */
+.highlight { stroke:var(--warn)!important; stroke-width:3.5!important; }
+.highlight-fill { fill:var(--warn)!important; opacity:.3; }
+/* CAS box */
+.cas-box { background:#1a1a2e; border:1px solid #5c6bc0; border-radius:var(--radius); padding:.8rem 1rem; margin:.8rem 0; font-family:monospace; color:#9fa8da; white-space:pre-wrap; font-size:.9rem; }
+.cas-box .cas-label { color:#5c6bc0; font-weight:700; font-family:sans-serif; font-size:.8rem; margin-bottom:.3rem; }
+/* RESPONSIVE */
+@media(max-width:800px){
+  nav { transform:translateX(-260px); }
+  nav.open { transform:translateX(0); }
+  .nav-toggle { display:block; }
+  main { margin-left:0; padding:1rem; }
+}
+/* Kirchhoff node/mesh selector */
+.node-sel, .mesh-sel { display:inline-block; padding:.3rem .7rem; margin:.2rem; border:2px solid var(--fg2); border-radius:var(--radius); cursor:pointer; transition:all .2s; }
+.node-sel:hover, .mesh-sel:hover { border-color:var(--accent); }
+.node-sel.active, .mesh-sel.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+/* Equation input row */
+.eq-row { display:flex; align-items:center; gap:.4rem; margin:.5rem 0; flex-wrap:wrap; font-family:monospace; font-size:1.05rem; }
+.eq-row input { width:60px; }
+.eq-row span { color:var(--fg2); }
+</style>
+</head>
+<body>
+<button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('open')" aria-label="Menü">☰</button>
+<nav id="nav">
+  <h1>⚡ Kirchhoff-Workshop</h1>
+  <a href="#" data-ch="0" class="active"><span class="ch-num">1</span> Parallelschaltung <span class="ch-check">✓</span></a>
+  <a href="#" data-ch="1"><span class="ch-num">2</span> Gemischte Schaltung <span class="ch-check">✓</span></a>
+  <a href="#" data-ch="2"><span class="ch-num">3</span> Wheatstone-Brücke <span class="ch-check">✓</span></a>
+  <a href="#" data-ch="3"><span class="ch-num">4</span> Kirchhoff'sche Regeln <span class="ch-check">✓</span></a>
+  <a href="#" data-ch="4"><span class="ch-num">5</span> Gleichungssystem <span class="ch-check">✓</span></a>
+  <a href="#" data-ch="5"><span class="ch-num">6</span> Freier Rechner <span class="ch-check">✓</span></a>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 6 abgeschlossen</div>
+  </div>
+</nav>
+
+<main>
+<!-- ===== KAPITEL 1: PARALLELSCHALTUNG ===== -->
+<section id="ch0" class="active">
+<h2>1 · Parallelschaltung</h2>
+<div class="theory">
+  <h3>Formel</h3>
+  <div class="formula">1/R<sub>ges</sub> = 1/R₁ + 1/R₂ + 1/R₃</div>
+  <p>Bei der Parallelschaltung liegt an allen Widerständen die <strong>gleiche Spannung</strong> an. Die Ströme teilen sich auf.</p>
+</div>
+
+<svg class="circuit" viewBox="0 0 440 220" id="svg-parallel">
+  <!-- Wires -->
+  <line x1="30" y1="110" x2="100" y2="110" class="wire"/>
+  <line x1="100" y1="40" x2="100" y2="180" class="wire"/>
+  <line x1="340" y1="40" x2="340" y2="180" class="wire"/>
+  <line x1="340" y1="110" x2="410" y2="110" class="wire"/>
+  <!-- R1 -->
+  <line x1="100" y1="40" x2="160" y2="40" class="wire"/>
+  <polyline points="160,40 170,25 190,55 210,25 230,55 250,25 260,40" class="resistor"/>
+  <line x1="260" y1="40" x2="340" y2="40" class="wire"/>
+  <text x="210" y="18" text-anchor="middle" id="par-r1-label">R₁ = 100 Ω</text>
+  <!-- R2 -->
+  <line x1="100" y1="110" x2="160" y2="110" class="wire"/>
+  <polyline points="160,110 170,95 190,125 210,95 230,125 250,95 260,110" class="resistor"/>
+  <line x1="260" y1="110" x2="340" y2="110" class="wire"/>
+  <text x="210" y="145" text-anchor="middle" id="par-r2-label">R₂ = 220 Ω</text>
+  <!-- R3 -->
+  <line x1="100" y1="180" x2="160" y2="180" class="wire"/>
+  <polyline points="160,180 170,165 190,195 210,165 230,195 250,165 260,180" class="resistor"/>
+  <line x1="260" y1="180" x2="340" y2="180" class="wire"/>
+  <text x="210" y="210" text-anchor="middle" id="par-r3-label">R₃ = 330 Ω</text>
+  <!-- Flow lines -->
+  <line x1="100" y1="40" x2="340" y2="40" class="flow" style="opacity:0" id="par-flow1"/>
+  <line x1="100" y1="110" x2="340" y2="110" class="flow" style="opacity:0" id="par-flow2"/>
+  <line x1="100" y1="180" x2="340" y2="180" class="flow" style="opacity:0" id="par-flow3"/>
+  <!-- Nodes -->
+  <circle cx="100" cy="110" r="5" class="node-dot"/>
+  <circle cx="340" cy="110" r="5" class="node-dot"/>
+  <text x="20" y="115" text-anchor="middle" fill="#ffa726" font-weight="700">+</text>
+  <text x="420" y="115" text-anchor="middle" fill="#ffa726" font-weight="700">−</text>
+</svg>
+
+<h3>Werte einstellen</h3>
+<div class="slider-group">
+  <label>R₁:</label>
+  <input type="range" min="10" max="1000" value="100" step="10" id="par-r1" oninput="parCalc()">
+  <span class="val" id="par-r1-val">100 Ω</span>
+</div>
+<div class="slider-group">
+  <label>R₂:</label>
+  <input type="range" min="10" max="1000" value="220" step="10" id="par-r2" oninput="parCalc()">
+  <span class="val" id="par-r2-val">220 Ω</span>
+</div>
+<div class="slider-group">
+  <label>R₃:</label>
+  <input type="range" min="10" max="1000" value="330" step="10" id="par-r3" oninput="parCalc()">
+  <span class="val" id="par-r3-val">330 Ω</span>
+</div>
+<div class="slider-group">
+  <label>U:</label>
+  <input type="range" min="1" max="30" value="12" step="0.5" id="par-u" oninput="parCalc()">
+  <span class="val" id="par-u-val">12 V</span>
+</div>
+
+<div class="result info show" id="par-result">
+  <div class="result-grid" id="par-result-grid"></div>
+</div>
+
+<h3>Übungsaufgabe</h3>
+<p>R₁ = 150 Ω, R₂ = 300 Ω parallel. Wie groß ist R<sub>ges</sub>?</p>
+<div class="input-group">
+  <label>R<sub>ges</sub> =</label>
+  <input type="number" id="par-quiz" step="1">
+  <span class="unit">Ω</span>
+  <button onclick="parCheck()">Prüfen</button>
+</div>
+<div class="result" id="par-quiz-result"></div>
+</section>
+
+<!-- ===== KAPITEL 2: GEMISCHTE SCHALTUNG ===== -->
+<section id="ch1">
+<h2>2 · Gemischte Schaltungen</h2>
+<div class="theory">
+  <p>Gemischte Schaltungen enthalten sowohl <strong>Reihen-</strong> als auch <strong>Parallelschaltungen</strong>. Man vereinfacht schrittweise von innen nach außen.</p>
+</div>
+
+<svg class="circuit" viewBox="0 0 480 200" id="svg-mixed">
+  <!-- Source -->
+  <line x1="30" y1="100" x2="80" y2="100" class="wire"/>
+  <!-- R1 in series -->
+  <polyline points="80,100 90,85 110,115 130,85 150,115 160,100" class="resistor" id="mix-r1-svg"/>
+  <text x="120" y="75" text-anchor="middle" id="mix-r1-text">R₁ = 100 Ω</text>
+  <line x1="160" y1="100" x2="200" y2="100" class="wire"/>
+  <!-- Split -->
+  <line x1="200" y1="50" x2="200" y2="150" class="wire"/>
+  <!-- R2 top -->
+  <line x1="200" y1="50" x2="240" y2="50" class="wire"/>
+  <polyline points="240,50 250,35 270,65 290,35 310,65 320,50" class="resistor" id="mix-r2-svg"/>
+  <line x1="320" y1="50" x2="380" y2="50" class="wire"/>
+  <text x="280" y="30" text-anchor="middle" id="mix-r2-text">R₂ = 220 Ω</text>
+  <!-- R3 bottom -->
+  <line x1="200" y1="150" x2="240" y2="150" class="wire"/>
+  <polyline points="240,150 250,135 270,165 290,135 310,165 320,150" class="resistor" id="mix-r3-svg"/>
+  <line x1="320" y1="150" x2="380" y2="150" class="wire"/>
+  <text x="280" y="175" text-anchor="middle" id="mix-r3-text">R₃ = 330 Ω</text>
+  <!-- Merge -->
+  <line x1="380" y1="50" x2="380" y2="150" class="wire"/>
+  <line x1="380" y1="100" x2="450" y2="100" class="wire"/>
+  <!-- Nodes -->
+  <circle cx="200" cy="100" r="5" class="node-dot"/>
+  <circle cx="380" cy="100" r="5" class="node-dot"/>
+</svg>
+
+<h3>Schritt-für-Schritt Vereinfachung</h3>
+<div class="step-box current" id="mix-step1">
+  <h4>Schritt 1: Welche Widerstände liegen parallel?</h4>
+  <div class="choice-btns">
+    <button onclick="mixChoice(1,'r1r2')">R₁ ∥ R₂</button>
+    <button onclick="mixChoice(1,'r2r3')">R₂ ∥ R₃</button>
+    <button onclick="mixChoice(1,'r1r3')">R₁ ∥ R₃</button>
+  </div>
+  <div class="result" id="mix-step1-result"></div>
+</div>
+<div class="step-box" id="mix-step2" style="opacity:.4">
+  <h4>Schritt 2: Berechne R₂₃ = R₂ ∥ R₃</h4>
+  <div class="input-group">
+    <label>R₂₃ =</label>
+    <input type="number" id="mix-r23" step="0.1">
+    <span class="unit">Ω</span>
+    <button onclick="mixCheck2()">Prüfen</button>
+  </div>
+  <div class="result" id="mix-step2-result"></div>
+</div>
+<div class="step-box" id="mix-step3" style="opacity:.4">
+  <h4>Schritt 3: R<sub>ges</sub> = R₁ + R₂₃ (Reihenschaltung)</h4>
+  <div class="input-group">
+    <label>R<sub>ges</sub> =</label>
+    <input type="number" id="mix-rges" step="0.1">
+    <span class="unit">Ω</span>
+    <button onclick="mixCheck3()">Prüfen</button>
+  </div>
+  <div class="result" id="mix-step3-result"></div>
+</div>
+</section>
+
+<!-- ===== KAPITEL 3: WHEATSTONE-BRÜCKE ===== -->
+<section id="ch2">
+<h2>3 · Wheatstone-Brücke</h2>
+<div class="theory">
+  <p>Die Wheatstone-Brücke besteht aus <strong>vier Widerständen</strong> in einer Brücken-(Diamant-)Anordnung und einem <strong>Brückenwiderstand R₅</strong> zwischen den Mittelpunkten.</p>
+  <div class="formula">Diese Schaltung lässt sich <strong>NICHT</strong> durch Reihen-/Parallelschaltung vereinfachen!</div>
+</div>
+
+<svg class="circuit" viewBox="0 0 400 350" id="svg-wheatstone">
+  <!-- Diamond: A(top) B(left) C(right) D(bottom) -->
+  <!-- A = 200,30  B = 60,175  C = 340,175  D = 200,320 -->
+  <!-- R1: A→B -->
+  <line x1="200" y1="30" x2="155" y2="75" class="wire"/>
+  <polyline points="155,75 138,78 142,95 125,98 129,115 112,118 116,135" class="resistor"/>
+  <line x1="116" y1="135" x2="60" y2="175" class="wire"/>
+  <text x="100" y="85" text-anchor="end" fill="#81c784" font-weight="600">R₁</text>
+  <!-- R2: A→C -->
+  <line x1="200" y1="30" x2="245" y2="75" class="wire"/>
+  <polyline points="245,75 262,78 258,95 275,98 271,115 288,118 284,135" class="resistor"/>
+  <line x1="284" y1="135" x2="340" y2="175" class="wire"/>
+  <text x="300" y="85" text-anchor="start" fill="#81c784" font-weight="600">R₂</text>
+  <!-- R3: B→D -->
+  <line x1="60" y1="175" x2="116" y2="215" class="wire"/>
+  <polyline points="116,215 112,232 129,235 125,252 142,255 138,272 155,275" class="resistor"/>
+  <line x1="155" y1="275" x2="200" y2="320" class="wire"/>
+  <text x="100" y="265" text-anchor="end" fill="#81c784" font-weight="600">R₃</text>
+  <!-- R4: C→D -->
+  <line x1="340" y1="175" x2="284" y2="215" class="wire"/>
+  <polyline points="284,215 288,232 271,235 275,252 258,255 262,272 245,275" class="resistor"/>
+  <line x1="245" y1="275" x2="200" y2="320" class="wire"/>
+  <text x="300" y="265" text-anchor="start" fill="#81c784" font-weight="600">R₄</text>
+  <!-- R5: B→C (bridge) -->
+  <line x1="60" y1="175" x2="130" y2="175" class="wire"/>
+  <polyline points="130,175 140,160 160,190 180,160 200,190 220,160 240,190 250,175" class="resistor" style="stroke:var(--warn)"/>
+  <line x1="250" y1="175" x2="340" y2="175" class="wire"/>
+  <text x="200" y="205" text-anchor="middle" fill="#ffa726" font-weight="700">R₅</text>
+  <!-- Nodes -->
+  <circle cx="200" cy="30" r="6" class="node-dot"/><text x="200" y="18" text-anchor="middle" fill="#4caf50" font-weight="700">A</text>
+  <circle cx="60" cy="175" r="6" class="node-dot"/><text x="40" y="180" text-anchor="middle" fill="#4caf50" font-weight="700">B</text>
+  <circle cx="340" cy="175" r="6" class="node-dot"/><text x="365" y="180" text-anchor="middle" fill="#4caf50" font-weight="700">C</text>
+  <circle cx="200" cy="320" r="6" class="node-dot"/><text x="200" y="345" text-anchor="middle" fill="#4caf50" font-weight="700">D</text>
+  <!-- Source labels -->
+  <text x="200" y="8" text-anchor="middle" fill="#ffa726">+ U₀ −</text>
+  <!-- Current arrows as text -->
+  <text x="105" y="105" text-anchor="end" fill="#ffa726" font-size="12">→ I₁</text>
+  <text x="295" y="105" text-anchor="start" fill="#ffa726" font-size="12">→ I₂</text>
+  <text x="105" y="250" text-anchor="end" fill="#ffa726" font-size="12">→ I₃</text>
+  <text x="295" y="250" text-anchor="start" fill="#ffa726" font-size="12">→ I₄</text>
+  <text x="200" y="168" text-anchor="middle" fill="#ffa726" font-size="12">→ I₅</text>
+</svg>
+
+<h3>Warum geht Reihe/Parallel nicht?</h3>
+<ul>
+  <li>R₁ und R₃ liegen <strong>nicht einfach in Reihe</strong>, weil am Knoten B ein Strom über R₅ abfließt.</li>
+  <li>R₁ und R₂ liegen <strong>nicht parallel</strong>, weil sie verschiedene Endknoten haben (B vs. C).</li>
+  <li>Der Brückenwiderstand R₅ verbindet die beiden Zweige → <strong>keine einfache Zerlegung möglich</strong>.</li>
+</ul>
+
+<h3>Abgeglichene Brücke</h3>
+<div class="theory">
+  <div class="formula">R₁ · R₄ = R₂ · R₃ ⟹ I₅ = 0, U<sub>BC</sub> = 0</div>
+  <p>Wenn die Brücke <strong>abgeglichen</strong> ist, fließt kein Strom durch R₅. Dann darf man Reihen-/Parallel-Vereinfachung nutzen:</p>
+  <div class="formula">R<sub>ges</sub> = (R₁+R₃) ∥ (R₂+R₄)</div>
+</div>
+
+<h3>Ist unsere Brücke abgeglichen?</h3>
+<div class="input-group">
+  <span>R₁·R₄ = 100·470 = <strong>47.000</strong></span>
+</div>
+<div class="input-group">
+  <span>R₂·R₃ = 220·330 = <strong>72.600</strong></span>
+</div>
+<div class="result info show">47.000 ≠ 72.600 → Die Brücke ist <strong>nicht abgeglichen</strong>. Wir brauchen Kirchhoff!</div>
+
+<h3>Quiz</h3>
+<p>Wann ist eine Wheatstone-Brücke abgeglichen?</p>
+<div class="choice-btns">
+  <button onclick="wheatQuiz(this,false)">R₁ + R₄ = R₂ + R₃</button>
+  <button onclick="wheatQuiz(this,true)">R₁ · R₄ = R₂ · R₃</button>
+  <button onclick="wheatQuiz(this,false)">R₁ = R₂ = R₃ = R₄</button>
+</div>
+<div class="result" id="wheat-quiz-result"></div>
+</section>
+
+<!-- ===== KAPITEL 4: KIRCHHOFF ===== -->
+<section id="ch3">
+<h2>4 · Kirchhoff'sche Regeln</h2>
+
+<div class="theory">
+  <h3>1. Knotenregel (KCL)</h3>
+  <div class="formula">∑ I<sub>zu</sub> = ∑ I<sub>ab</sub> &nbsp;(bzw. ∑ I = 0 mit Vorzeichen)</div>
+  <h3 style="margin-top:.8rem">2. Maschenregel (KVL)</h3>
+  <div class="formula">∑ U = 0 &nbsp;(Umlauf in einer geschlossenen Masche)</div>
+</div>
+
+<div class="warn-box">
+  <strong>⚠️ Häufiger Fehler: Vorzeichenkonvention!</strong><br>
+  Lege <strong>zuerst</strong> alle Stromrichtungen fest (beliebig, aber dann <strong>konsistent</strong> bleiben!). Wenn das Ergebnis negativ wird, fließt der Strom eben andersrum. Das ist kein Fehler!<br><br>
+  <strong>Typischer Fehler heute:</strong> I₅ bei Knotengleichung als „zufließend" definiert, aber in der Maschengleichung als „abfließend" behandelt → Widerspruch!
+</div>
+
+<h3>Unsere Stromrichtungen (Konvention)</h3>
+<p>Wir definieren für die Wheatstone-Brücke:</p>
+<ul>
+  <li><strong>I₁</strong>: A → B (durch R₁)</li>
+  <li><strong>I₂</strong>: A → C (durch R₂)</li>
+  <li><strong>I₃</strong>: B → D (durch R₃)</li>
+  <li><strong>I₄</strong>: C → D (durch R₄)</li>
+  <li><strong>I₅</strong>: B → C (durch R₅) &nbsp;← <em>konsistent festgelegt!</em></li>
+</ul>
+
+<h3>Knotenregel anwenden</h3>
+<p>Wähle einen Knoten und trage die Gleichung ein:</p>
+<div style="margin:.5rem 0">
+  <span class="node-sel active" onclick="selNode(this,'A')" id="node-A">A</span>
+  <span class="node-sel" onclick="selNode(this,'B')" id="node-B">B</span>
+  <span class="node-sel" onclick="selNode(this,'C')" id="node-C">C</span>
+  <span class="node-sel" onclick="selNode(this,'D')" id="node-D">D</span>
+</div>
+<div id="node-hint" class="theory" style="font-size:.9rem"></div>
+<p style="margin-top:.5rem">Trage die Knotengleichung ein (z.B. <code>I1+I2=I0</code> oder <code>I1-I3-I5=0</code>):</p>
+<div class="input-group">
+  <input type="text" id="node-eq" style="width:250px;text-align:left" placeholder="z.B. I1-I3-I5=0">
+  <button onclick="checkNodeEq()">Prüfen</button>
+</div>
+<div class="result" id="node-eq-result"></div>
+
+<h3>Maschenregel anwenden</h3>
+<p>Wähle eine Masche:</p>
+<div style="margin:.5rem 0">
+  <span class="mesh-sel active" onclick="selMesh(this,'M1')" id="mesh-M1">M1: A→B→D→A</span>
+  <span class="mesh-sel" onclick="selMesh(this,'M2')" id="mesh-M2">M2: A→C→D→A</span>
+  <span class="mesh-sel" onclick="selMesh(this,'M3')" id="mesh-M3">M3: B→C→D→B</span>
+</div>
+<div id="mesh-hint" class="theory" style="font-size:.9rem"></div>
+<p style="margin-top:.5rem">Trage die Maschengleichung ein (z.B. <code>U0-R1*I1-R3*I3=0</code>):</p>
+<div class="input-group">
+  <input type="text" id="mesh-eq" style="width:300px;text-align:left" placeholder="z.B. U0-R1*I1-R3*I3=0">
+  <button onclick="checkMeshEq()">Prüfen</button>
+</div>
+<div class="result" id="mesh-eq-result"></div>
+
+<h3>Vorzeichenkonvention – Übung</h3>
+<p>Gegeben: Am Knoten B gilt I₁ = I₃ + I₅. In Masche M3 (B→C→D→B) kommt R₅ vor.</p>
+<p><strong>Frage:</strong> Welches Vorzeichen hat R₅·I₅ in Masche M3 (Umlaufrichtung B→C)?</p>
+<div class="choice-btns">
+  <button onclick="signQuiz(this,false)">+R₅·I₅ (positiv)</button>
+  <button onclick="signQuiz(this,true)">−R₅·I₅ (negativ)</button>
+</div>
+<div class="result" id="sign-quiz-result"></div>
+<div class="result info" id="sign-explain" style="display:none">
+  <strong>Erklärung:</strong> I₅ fließt B→C. Die Masche M3 geht B→C→D→B. Im Abschnitt B→C ist die Umlaufrichtung <em>gleich</em> der Stromrichtung. Also ist der Spannungsabfall +R₅·I₅. Aber die Maschengleichung heißt ∑U=0, d.h. wir subtrahieren Spannungsabfälle:<br>
+  <strong>−R₅·I₅ − R₄·I₄ + R₃·I₃ = 0</strong><br>
+  Alternativ: <strong>R₅·I₅ + R₄·I₄ = R₃·I₃</strong><br><br>
+  Achtung: Je nach Umlaufrichtung ändert sich das Vorzeichen. Entscheidend ist die <strong>Konsistenz</strong>!
+</div>
+</section>
+
+<!-- ===== KAPITEL 5: GLEICHUNGSSYSTEM ===== -->
+<section id="ch4">
+<h2>5 · Gleichungssystem aufstellen & lösen</h2>
+
+<div class="theory">
+  <p>Für die Wheatstone-Brücke mit 5 unbekannten Strömen (I₁..I₅) brauchen wir <strong>5 Gleichungen</strong>:</p>
+  <ul>
+    <li>2 Knotengleichungen (z.B. Knoten B und C)</li>
+    <li>3 Maschengleichungen (z.B. M1, M2, M3)</li>
+  </ul>
+  <p>Aber: Nur 2 Knoten + 2 Maschen + 1 weitere Beziehung sind unabhängig. Wir verwenden 3 Maschen (eine ist redundant als Check).</p>
+</div>
+
+<h3>Die 5 Gleichungen (Default-Werte)</h3>
+<div class="theory" style="font-family:monospace;font-size:1rem;line-height:1.8">
+  <strong>Knoten A:</strong> I₀ = I₁ + I₂<br>
+  <strong>Knoten B:</strong> I₁ = I₃ + I₅<br>
+  <strong>Knoten C:</strong> I₂ + I₅ = I₄ &nbsp;(bzw. I₂ − I₄ + I₅ = 0)<br>
+  <strong>Masche M1 (A-B-D-A):</strong> U₀ = R₁·I₁ + R₃·I₃<br>
+  <strong>Masche M2 (A-C-D-A):</strong> U₀ = R₂·I₂ + R₄·I₄<br>
+  <strong>Masche M3 (B-C-D-B):</strong> R₅·I₅ + R₄·I₄ − R₃·I₃ = 0
+</div>
+
+<h3>Koeffizienten-Matrix eingeben</h3>
+<p>Trage die Koeffizienten ein. Format: <code>a₁·I₁ + a₂·I₂ + a₃·I₃ + a₄·I₄ + a₅·I₅ = b</code></p>
+<table class="eq-table" id="eq-table">
+  <tr><th></th><th>I₁</th><th>I₂</th><th>I₃</th><th>I₄</th><th>I₅</th><th>=</th><th>b</th></tr>
+  <tr><td>Knoten B</td><td><input id="eq00" value="1"></td><td><input id="eq01" value="0"></td><td><input id="eq02" value="-1"></td><td><input id="eq03" value="0"></td><td><input id="eq04" value="-1"></td><td>=</td><td><input id="eq05" value="0"></td></tr>
+  <tr><td>Knoten C</td><td><input id="eq10" value="0"></td><td><input id="eq11" value="1"></td><td><input id="eq12" value="0"></td><td><input id="eq13" value="-1"></td><td><input id="eq14" value="1"></td><td>=</td><td><input id="eq15" value="0"></td></tr>
+  <tr><td>Masche 1</td><td><input id="eq20" value="100"></td><td><input id="eq21" value="0"></td><td><input id="eq22" value="330"></td><td><input id="eq23" value="0"></td><td><input id="eq24" value="0"></td><td>=</td><td><input id="eq25" value="12"></td></tr>
+  <tr><td>Masche 2</td><td><input id="eq30" value="0"></td><td><input id="eq31" value="220"></td><td><input id="eq32" value="0"></td><td><input id="eq33" value="470"></td><td><input id="eq34" value="0"></td><td>=</td><td><input id="eq35" value="12"></td></tr>
+  <tr><td>Masche 3</td><td><input id="eq40" value="0"></td><td><input id="eq41" value="0"></td><td><input id="eq42" value="-330"></td><td><input id="eq43" value="470"></td><td><input id="eq44" value="150"></td><td>=</td><td><input id="eq45" value="0"></td></tr>
+</table>
+
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0">
+  <button onclick="checkEqSystem()">Gleichungen prüfen</button>
+  <button onclick="solveSystem()" class="secondary">Lösen (Gauß)</button>
+  <button onclick="showCAS()" class="secondary">ClassPad Syntax</button>
+</div>
+
+<div class="result" id="eq-check-result"></div>
+<div class="result" id="eq-solve-result"></div>
+
+<div class="cas-box" style="display:none" id="cas-box">
+  <div class="cas-label">📱 ClassPad CAS Eingabe:</div>
+solve({
+  I1-I3-I5=0,
+  I2-I4+I5=0,
+  100*I1+330*I3=12,
+  220*I2+470*I4=12,
+  -330*I3+470*I4+150*I5=0
+},{I1,I2,I3,I4,I5})
+</div>
+</section>
+
+<!-- ===== KAPITEL 6: FREIER RECHNER ===== -->
+<section id="ch5">
+<h2>6 · Freier Rechner</h2>
+
+<div class="theory">
+  <p>Gib eigene Werte ein und berechne sofort alle Ströme, Spannungen und R<sub>ges</sub> der Wheatstone-Brücke.</p>
+</div>
+
+<svg class="circuit" viewBox="0 0 400 350" id="svg-calc">
+  <!-- Same diamond as ch2 but with live values -->
+  <line x1="200" y1="30" x2="155" y2="75" class="wire"/>
+  <polyline points="155,75 138,78 142,95 125,98 129,115 112,118 116,135" class="resistor"/>
+  <line x1="116" y1="135" x2="60" y2="175" class="wire"/>
+  <text x="90" y="85" text-anchor="end" id="calc-r1-label" fill="#81c784" font-weight="600">R₁</text>
+
+  <line x1="200" y1="30" x2="245" y2="75" class="wire"/>
+  <polyline points="245,75 262,78 258,95 275,98 271,115 288,118 284,135" class="resistor"/>
+  <line x1="284" y1="135" x2="340" y2="175" class="wire"/>
+  <text x="310" y="85" text-anchor="start" id="calc-r2-label" fill="#81c784" font-weight="600">R₂</text>
+
+  <line x1="60" y1="175" x2="116" y2="215" class="wire"/>
+  <polyline points="116,215 112,232 129,235 125,252 142,255 138,272 155,275" class="resistor"/>
+  <line x1="155" y1="275" x2="200" y2="320" class="wire"/>
+  <text x="90" y="265" text-anchor="end" id="calc-r3-label" fill="#81c784" font-weight="600">R₃</text>
+
+  <line x1="340" y1="175" x2="284" y2="215" class="wire"/>
+  <polyline points="284,215 288,232 271,235 275,252 258,255 262,272 245,275" class="resistor"/>
+  <line x1="245" y1="275" x2="200" y2="320" class="wire"/>
+  <text x="310" y="265" text-anchor="start" id="calc-r4-label" fill="#81c784" font-weight="600">R₄</text>
+
+  <line x1="60" y1="175" x2="130" y2="175" class="wire"/>
+  <polyline points="130,175 140,160 160,190 180,160 200,190 220,160 240,190 250,175" class="resistor" style="stroke:var(--warn)"/>
+  <line x1="250" y1="175" x2="340" y2="175" class="wire"/>
+  <text x="200" y="205" text-anchor="middle" id="calc-r5-label" fill="#ffa726" font-weight="700">R₅</text>
+
+  <circle cx="200" cy="30" r="6" class="node-dot"/>
+  <circle cx="60" cy="175" r="6" class="node-dot"/>
+  <circle cx="340" cy="175" r="6" class="node-dot"/>
+  <circle cx="200" cy="320" r="6" class="node-dot"/>
+  <text x="200" y="18" text-anchor="middle" fill="#4caf50" font-weight="700">A</text>
+  <text x="40" y="180" text-anchor="middle" fill="#4caf50" font-weight="700">B</text>
+  <text x="365" y="180" text-anchor="middle" fill="#4caf50" font-weight="700">C</text>
+  <text x="200" y="345" text-anchor="middle" fill="#4caf50" font-weight="700">D</text>
+
+  <!-- Current values overlay -->
+  <text x="105" y="105" text-anchor="end" fill="#ffa726" font-size="13" id="calc-i1-svg"></text>
+  <text x="295" y="105" text-anchor="start" fill="#ffa726" font-size="13" id="calc-i2-svg"></text>
+  <text x="105" y="250" text-anchor="end" fill="#ffa726" font-size="13" id="calc-i3-svg"></text>
+  <text x="295" y="250" text-anchor="start" fill="#ffa726" font-size="13" id="calc-i4-svg"></text>
+  <text x="200" y="168" text-anchor="middle" fill="#ffa726" font-size="13" id="calc-i5-svg"></text>
+</svg>
+
+<div class="input-group">
+  <label>R₁:</label><input type="number" id="calc-r1" value="100" min="1" oninput="calcAll()"><span class="unit">Ω</span>
+  <label>R₂:</label><input type="number" id="calc-r2" value="220" min="1" oninput="calcAll()"><span class="unit">Ω</span>
+</div>
+<div class="input-group">
+  <label>R₃:</label><input type="number" id="calc-r3" value="330" min="1" oninput="calcAll()"><span class="unit">Ω</span>
+  <label>R₄:</label><input type="number" id="calc-r4" value="470" min="1" oninput="calcAll()"><span class="unit">Ω</span>
+</div>
+<div class="input-group">
+  <label>R₅:</label><input type="number" id="calc-r5" value="150" min="1" oninput="calcAll()"><span class="unit">Ω</span>
+  <label>U₀:</label><input type="number" id="calc-u0" value="12" min="0.1" step="0.1" oninput="calcAll()"><span class="unit">V</span>
+</div>
+
+<div class="result info show" id="calc-result">
+  <div class="result-grid" id="calc-result-grid"></div>
+</div>
+
+<div class="theory" style="margin-top:1rem">
+  <h3>Abgleich-Check</h3>
+  <div id="calc-balance"></div>
+</div>
+
+<div class="cas-box" id="calc-cas">
+  <div class="cas-label">📱 ClassPad CAS:</div>
+  <span id="calc-cas-text"></span>
+</div>
+</section>
+</main>
+
+<script>
+'use strict';
+
+// ===== NAVIGATION =====
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('nav a[data-ch]');
+const completed = new Set();
+
+function goTo(ch) {
+  sections.forEach((s,i) => { s.classList.toggle('active', i===ch); });
+  navLinks.forEach((a,i) => { a.classList.toggle('active', i===ch); });
+  document.querySelector('nav').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+navLinks.forEach(a => a.addEventListener('click', e => { e.preventDefault(); goTo(+a.dataset.ch); }));
+
+function markDone(ch) {
+  completed.add(ch);
+  navLinks[ch].querySelector('.ch-check').classList.add('done');
+  const pct = Math.round(completed.size/6*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = completed.size+' / 6 abgeschlossen';
+}
+
+function showResult(id, ok, msg) {
+  const el = document.getElementById(id);
+  el.className = 'result show ' + (ok ? 'ok' : 'err');
+  el.innerHTML = (ok ? '✓ ' : '✗ ') + msg;
+}
+
+// ===== CH1: PARALLEL =====
+function parCalc() {
+  const r1=+document.getElementById('par-r1').value;
+  const r2=+document.getElementById('par-r2').value;
+  const r3=+document.getElementById('par-r3').value;
+  const u=+document.getElementById('par-u').value;
+  document.getElementById('par-r1-val').textContent=r1+' Ω';
+  document.getElementById('par-r2-val').textContent=r2+' Ω';
+  document.getElementById('par-r3-val').textContent=r3+' Ω';
+  document.getElementById('par-u-val').textContent=u+' V';
+  document.getElementById('par-r1-label').textContent='R₁ = '+r1+' Ω';
+  document.getElementById('par-r2-label').textContent='R₂ = '+r2+' Ω';
+  document.getElementById('par-r3-label').textContent='R₃ = '+r3+' Ω';
+  const rg = 1/(1/r1+1/r2+1/r3);
+  const ig = u/rg;
+  const i1=u/r1, i2=u/r2, i3=u/r3;
+  // show flow animation
+  ['par-flow1','par-flow2','par-flow3'].forEach(id => document.getElementById(id).style.opacity='.6');
+  document.getElementById('par-result-grid').innerHTML = [
+    item('R<sub>ges</sub>', rg.toFixed(2)+' Ω'),
+    item('I<sub>ges</sub>', (ig*1000).toFixed(1)+' mA'),
+    item('I₁', (i1*1000).toFixed(1)+' mA'),
+    item('I₂', (i2*1000).toFixed(1)+' mA'),
+    item('I₃', (i3*1000).toFixed(1)+' mA'),
+    item('U', u.toFixed(1)+' V'),
+  ].join('');
+}
+
+function item(l,v) { return `<div class="item"><div class="lbl">${l}</div><div class="val">${v}</div></div>`; }
+
+function parCheck() {
+  const ans = +document.getElementById('par-quiz').value;
+  const correct = 1/(1/150+1/300); // 100
+  if(Math.abs(ans-correct)<1) { showResult('par-quiz-result',true,'Richtig! R<sub>ges</sub> = 100 Ω'); markDone(0); }
+  else showResult('par-quiz-result',false,'Falsch. Tipp: 1/R<sub>ges</sub> = 1/150 + 1/300');
+}
+
+parCalc();
+
+// ===== CH2: MIXED =====
+let mixStep = 1;
+function mixChoice(step, choice) {
+  if(step!==1) return;
+  const ok = choice==='r2r3';
+  showResult('mix-step1-result', ok, ok ? 'Richtig! R₂ und R₃ liegen parallel.' : 'Falsch – schau dir an, welche Widerstände die gleichen Knoten teilen.');
+  if(ok) { document.getElementById('mix-step2').style.opacity='1'; mixStep=2; }
+}
+function mixCheck2() {
+  const ans = +document.getElementById('mix-r23').value;
+  const correct = 1/(1/220+1/330); // ≈132
+  if(Math.abs(ans-correct)<1) { showResult('mix-step2-result',true,'Richtig! R₂₃ ≈ '+correct.toFixed(1)+' Ω'); document.getElementById('mix-step3').style.opacity='1'; mixStep=3; }
+  else showResult('mix-step2-result',false,'Falsch. R₂₃ = 1/(1/220 + 1/330) ≈ '+correct.toFixed(1)+' Ω');
+}
+function mixCheck3() {
+  const r23 = 1/(1/220+1/330);
+  const correct = 100 + r23;
+  const ans = +document.getElementById('mix-rges').value;
+  if(Math.abs(ans-correct)<1) { showResult('mix-step3-result',true,'Richtig! R<sub>ges</sub> ≈ '+correct.toFixed(1)+' Ω'); markDone(1); }
+  else showResult('mix-step3-result',false,'Falsch. R<sub>ges</sub> = R₁ + R₂₃ = 100 + '+r23.toFixed(1)+' ≈ '+correct.toFixed(1)+' Ω');
+}
+
+// ===== CH3: WHEATSTONE QUIZ =====
+function wheatQuiz(btn, ok) {
+  showResult('wheat-quiz-result', ok, ok ? 'Richtig! R₁·R₄ = R₂·R₃ ist die Abgleichbedingung.' : 'Falsch – es ist ein Produkt, keine Summe!');
+  if(ok) markDone(2);
+}
+
+// ===== CH4: KIRCHHOFF =====
+let currentNode = 'A';
+const nodeEqs = {
+  A: {hint:'Am Knoten A: Der Gesamtstrom teilt sich in I₁ und I₂.', valid:['I1+I2','I0']},
+  B: {hint:'Am Knoten B: I₁ kommt an, I₃ und I₅ gehen ab.', check: coeffs => coeffs[0]===1 && coeffs[2]===-1 && coeffs[4]===-1 && coeffs[1]===0 && coeffs[3]===0},
+  C: {hint:'Am Knoten C: I₂ und I₅ kommen an, I₄ geht ab.', check: coeffs => coeffs[1]===1 && coeffs[4]===1 && coeffs[3]===-1 && coeffs[0]===0 && coeffs[2]===0},
+  D: {hint:'Am Knoten D: I₃ und I₄ kommen an, der Strom fließt zurück zur Quelle.', valid:['I3+I4','I0']},
+};
+
+function selNode(el, node) {
+  document.querySelectorAll('.node-sel').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  currentNode = node;
+  document.getElementById('node-hint').innerHTML = nodeEqs[node].hint;
+}
+selNode(document.getElementById('node-A'),'A');
+
+function parseEqCoeffs(str) {
+  // Parse simple equation like "I1-I3-I5=0" into coefficients [I1,I2,I3,I4,I5,rhs]
+  str = str.replace(/\s/g,'').toUpperCase();
+  const parts = str.split('=');
+  if(parts.length!==2) return null;
+  const lhs = parts[0], rhs = parseFloat(parts[1])||0;
+  const coeffs = [0,0,0,0,0];
+  const regex = /([+-]?)(\d*)I([1-5])/g;
+  let m;
+  while((m=regex.exec(lhs))!==null) {
+    const sign = m[1]==='-' ? -1 : 1;
+    const coeff = m[2] ? parseInt(m[2]) : 1;
+    coeffs[parseInt(m[3])-1] = sign*coeff;
+  }
+  return {coeffs, rhs};
+}
+
+function checkNodeEq() {
+  const input = document.getElementById('node-eq').value.trim();
+  if(!input) return;
+  const parsed = parseEqCoeffs(input);
+  if(!parsed) { showResult('node-eq-result',false,'Konnte die Gleichung nicht parsen. Format: I1-I3-I5=0'); return; }
+  // Check based on current node
+  let ok = false;
+  if(currentNode==='B') { ok = parsed.coeffs[0]===1 && parsed.coeffs[2]===-1 && parsed.coeffs[4]===-1 && parsed.coeffs[1]===0 && parsed.coeffs[3]===0 && parsed.rhs===0; }
+  else if(currentNode==='C') {
+    // I2+I5-I4=0 or I2-I4+I5=0
+    ok = parsed.coeffs[1]===1 && parsed.coeffs[3]===-1 && parsed.coeffs[4]===1 && parsed.coeffs[0]===0 && parsed.coeffs[2]===0 && parsed.rhs===0;
+    // also accept I4=I2+I5 → rearranged: -I2+I4-I5=0
+    if(!ok) ok = parsed.coeffs[1]===-1 && parsed.coeffs[3]===1 && parsed.coeffs[4]===-1 && parsed.coeffs[0]===0 && parsed.coeffs[2]===0 && parsed.rhs===0;
+  }
+  else if(currentNode==='A') {
+    // I1+I2 on left → not easily checkable without I0, just accept common forms
+    showResult('node-eq-result',true,'Für Knoten A verwenden wir I₀ = I₁ + I₂. Da I₀ keine unserer 5 Unbekannten ist, nutzen wir lieber Knoten B und C!');
+    return;
+  }
+  else if(currentNode==='D') {
+    showResult('node-eq-result',true,'Für Knoten D: I₃ + I₄ = I₀. Auch hier kommt I₀ vor. Besser: Knoten B und C verwenden!');
+    return;
+  }
+  showResult('node-eq-result', ok, ok ? 'Richtig! ✓' : 'Nicht ganz. Tipp: '+nodeEqs[currentNode].hint);
+}
+
+let currentMesh = 'M1';
+const meshInfo = {
+  M1: {hint:'Masche 1 (A→B→D→A, im Uhrzeigersinn): U₀ − R₁·I₁ − R₃·I₃ = 0'},
+  M2: {hint:'Masche 2 (A→C→D→A, im Uhrzeigersinn): U₀ − R₂·I₂ − R₄·I₄ = 0'},
+  M3: {hint:'Masche 3 (B→C→D→B): R₅·I₅ + R₄·I₄ − R₃·I₃ = 0'},
+};
+
+function selMesh(el, mesh) {
+  document.querySelectorAll('.mesh-sel').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  currentMesh = mesh;
+  document.getElementById('mesh-hint').innerHTML = meshInfo[mesh].hint;
+}
+selMesh(document.getElementById('mesh-M1'),'M1');
+
+function checkMeshEq() {
+  const input = document.getElementById('mesh-eq').value.trim();
+  if(!input) return;
+  // Simple validation: just show the correct answer
+  const correct = meshInfo[currentMesh].hint;
+  showResult('mesh-eq-result', true, 'Korrekte Form: ' + correct + '<br>Vergleiche mit deiner Eingabe!');
+}
+
+function signQuiz(btn, ok) {
+  // The question asks about the sign of R5*I5 in mesh M3 going B→C
+  // I5 goes B→C, mesh goes B→C → same direction → voltage DROP → in ∑U=0 it's −R5·I5
+  // Wait, let me reconsider. If going B→C and current is B→C, voltage drops: U_R5 = -R5*I5 in KVL
+  // Actually the convention: going WITH current direction = voltage drop = subtract
+  // So −R₅·I₅ is correct in ∑U=0
+  showResult('sign-quiz-result', ok, ok ? 'Richtig! In der Maschengleichung (∑U=0) wird der Spannungsabfall subtrahiert, wenn Umlauf- und Stromrichtung übereinstimmen.' : 'Nicht ganz – denk daran: Umlaufrichtung = Stromrichtung → Spannungsabfall → negatives Vorzeichen in ∑U=0.');
+  document.getElementById('sign-explain').style.display = ok ? 'block' : 'none';
+  if(ok) markDone(3);
+}
+
+// ===== CH5: EQUATION SYSTEM =====
+function getEqMatrix() {
+  const A=[], b=[];
+  for(let i=0;i<5;i++) {
+    A.push([]);
+    for(let j=0;j<5;j++) A[i].push(parseFloat(document.getElementById('eq'+i+j).value)||0);
+    b.push(parseFloat(document.getElementById('eq'+i+5).value)||0);
+  }
+  return {A,b};
+}
+
+// Correct matrix for default values
+const correctA = [[1,0,-1,0,-1],[0,1,0,-1,1],[100,0,330,0,0],[0,220,0,470,0],[0,0,-330,470,150]];
+const correctB = [0,0,12,12,0];
+
+function checkEqSystem() {
+  const {A,b} = getEqMatrix();
+  let allOk = true;
+  for(let i=0;i<5;i++) {
+    for(let j=0;j<5;j++) {
+      const el = document.getElementById('eq'+i+j);
+      const ok = A[i][j]===correctA[i][j];
+      el.className = ok ? 'ok' : 'err';
+      if(!ok) allOk=false;
+    }
+    const el = document.getElementById('eq'+i+5);
+    const ok = b[i]===correctB[i];
+    el.className = ok ? 'ok' : 'err';
+    if(!ok) allOk=false;
+  }
+  showResult('eq-check-result', allOk, allOk ? 'Alle Koeffizienten korrekt!' : 'Einige Koeffizienten stimmen nicht (rot markiert).');
+  if(allOk) markDone(4);
+}
+
+function gaussSolve(A, b) {
+  const n = A.length;
+  // Augmented matrix
+  const M = A.map((row,i)=>[...row, b[i]]);
+  for(let col=0;col<n;col++) {
+    // Pivot
+    let maxRow=col;
+    for(let row=col+1;row<n;row++) if(Math.abs(M[row][col])>Math.abs(M[maxRow][col])) maxRow=row;
+    [M[col],M[maxRow]]=[M[maxRow],M[col]];
+    if(Math.abs(M[col][col])<1e-12) return null;
+    for(let row=col+1;row<n;row++) {
+      const f=M[row][col]/M[col][col];
+      for(let j=col;j<=n;j++) M[row][j]-=f*M[col][j];
+    }
+  }
+  // Back substitution
+  const x=new Array(n);
+  for(let i=n-1;i>=0;i--) {
+    x[i]=M[i][n];
+    for(let j=i+1;j<n;j++) x[i]-=M[i][j]*x[j];
+    x[i]/=M[i][i];
+  }
+  return x;
+}
+
+function solveSystem() {
+  const {A,b} = getEqMatrix();
+  const x = gaussSolve(A.map(r=>[...r]), [...b]);
+  if(!x) { showResult('eq-solve-result',false,'Gleichungssystem ist nicht lösbar (singuläre Matrix).'); return; }
+  const [I1,I2,I3,I4,I5] = x;
+  const I0 = I1+I2;
+  const U0 = b[2]||12; // from mesh 1
+  const Rges = U0/I0;
+  const Ubc = I5 * (parseFloat(document.getElementById('eq44').value)||150); // R5*I5
+
+  let html = '<strong>Lösung:</strong><br><div class="result-grid">';
+  html += item('I₁', (I1*1000).toFixed(3)+' mA');
+  html += item('I₂', (I2*1000).toFixed(3)+' mA');
+  html += item('I₃', (I3*1000).toFixed(3)+' mA');
+  html += item('I₄', (I4*1000).toFixed(3)+' mA');
+  html += item('I₅', (I5*1000).toFixed(3)+' mA');
+  html += item('I₀ = I₁+I₂', (I0*1000).toFixed(3)+' mA');
+  html += item('R<sub>ges</sub> = U₀/I₀', Rges.toFixed(2)+' Ω');
+  html += item('U<sub>BC</sub> = R₅·I₅', (Ubc*1000).toFixed(3)+' mV');
+  html += '</div>';
+  const el = document.getElementById('eq-solve-result');
+  el.className = 'result show info';
+  el.innerHTML = html;
+}
+
+function showCAS() {
+  const box = document.getElementById('cas-box');
+  box.style.display = box.style.display==='none' ? 'block' : 'none';
+}
+
+// ===== CH6: FREE CALCULATOR =====
+function solveWheatstone(R1,R2,R3,R4,R5,U0) {
+  const A = [[1,0,-1,0,-1],[0,1,0,-1,1],[R1,0,R3,0,0],[0,R2,0,R4,0],[0,0,-R3,R4,R5]];
+  const b = [0,0,U0,U0,0];
+  return gaussSolve(A,b);
+}
+
+function calcAll() {
+  const R1=+document.getElementById('calc-r1').value||100;
+  const R2=+document.getElementById('calc-r2').value||220;
+  const R3=+document.getElementById('calc-r3').value||330;
+  const R4=+document.getElementById('calc-r4').value||470;
+  const R5=+document.getElementById('calc-r5').value||150;
+  const U0=+document.getElementById('calc-u0').value||12;
+
+  // Update SVG labels
+  document.getElementById('calc-r1-label').textContent = 'R₁='+R1+'Ω';
+  document.getElementById('calc-r2-label').textContent = 'R₂='+R2+'Ω';
+  document.getElementById('calc-r3-label').textContent = 'R₃='+R3+'Ω';
+  document.getElementById('calc-r4-label').textContent = 'R₄='+R4+'Ω';
+  document.getElementById('calc-r5-label').textContent = 'R₅='+R5+'Ω';
+
+  const x = solveWheatstone(R1,R2,R3,R4,R5,U0);
+  if(!x) { document.getElementById('calc-result-grid').innerHTML='<em>Nicht lösbar</em>'; return; }
+  const [I1,I2,I3,I4,I5] = x;
+  const I0=I1+I2;
+  const Rges=U0/I0;
+  const Ubc=R5*I5;
+
+  // SVG current labels
+  const fmt = v => (v*1000).toFixed(2)+' mA';
+  document.getElementById('calc-i1-svg').textContent = 'I₁='+fmt(I1);
+  document.getElementById('calc-i2-svg').textContent = 'I₂='+fmt(I2);
+  document.getElementById('calc-i3-svg').textContent = 'I₃='+fmt(I3);
+  document.getElementById('calc-i4-svg').textContent = 'I₄='+fmt(I4);
+  document.getElementById('calc-i5-svg').textContent = 'I₅='+fmt(I5);
+
+  let html = '';
+  html += item('I₁', fmt(I1));
+  html += item('I₂', fmt(I2));
+  html += item('I₃', fmt(I3));
+  html += item('I₄', fmt(I4));
+  html += item('I₅', fmt(I5));
+  html += item('I₀', fmt(I0));
+  html += item('R<sub>ges</sub>', Rges.toFixed(2)+' Ω');
+  html += item('U<sub>BC</sub>', (Ubc*1000).toFixed(2)+' mV');
+  html += item('U<sub>R1</sub>', (R1*I1*1000).toFixed(2)+' mV');
+  html += item('U<sub>R2</sub>', (R2*I2*1000).toFixed(2)+' mV');
+  html += item('U<sub>R3</sub>', (R3*I3*1000).toFixed(2)+' mV');
+  html += item('U<sub>R4</sub>', (R4*I4*1000).toFixed(2)+' mV');
+  document.getElementById('calc-result-grid').innerHTML = html;
+
+  // Balance check
+  const prod1 = R1*R4, prod2 = R2*R3;
+  const balanced = Math.abs(prod1-prod2)<0.01;
+  document.getElementById('calc-balance').innerHTML = `R₁·R₄ = ${prod1} | R₂·R₃ = ${prod2} → ${balanced ? '<strong style="color:var(--ok)">Abgeglichen! I₅≈0</strong>' : '<strong style="color:var(--warn)">Nicht abgeglichen (I₅≠0)</strong>'}`;
+
+  // CAS text
+  document.getElementById('calc-cas-text').textContent =
+`solve({
+  I1-I3-I5=0,
+  I2-I4+I5=0,
+  ${R1}*I1+${R3}*I3=${U0},
+  ${R2}*I2+${R4}*I4=${U0},
+  -${R3}*I3+${R4}*I4+${R5}*I5=0
+},{I1,I2,I3,I4,I5})`;
+
+  markDone(5);
+}
+
+calcAll();
+
+// Init hints
+document.getElementById('node-hint').innerHTML = nodeEqs['A'].hint;
+document.getElementById('mesh-hint').innerHTML = meshInfo['M1'].hint;
+</script>
+</body>
+</html>
