@@ -6,10 +6,11 @@
 <title>Widerstandsnetzwerke – Interaktiver Workshop</title>
 <style>
 :root {
-  --bg: #0d1b0e; --bg2: #142116; --bg3: #1a2e1c;
-  --fg: #e8f0e8; --fg2: #a8c4a8; --accent: #4caf50;
-  --accent2: #81c784; --err: #ef5350; --ok: #66bb6a;
-  --warn: #ffa726; --radius: 8px; --shadow: 0 2px 8px #0004;
+  --bg: #f0f2f5; --bg2: #16213e; --bg3: #eef1f5;
+  --fg: #1a1a2e; --fg2: #555; --accent: #e94560;
+  --accent2: #0f3460; --err: #e94560; --ok: #27ae60;
+  --warn: #f0b429; --radius: 8px; --shadow: 0 2px 16px rgba(0,0,0,.06);
+  --blue: #3498db; --red: #e94560;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: 'Segoe UI', system-ui, sans-serif; background:var(--bg); color:var(--fg); min-height:100vh; display:flex; font-size:18px; line-height:1.6; }
@@ -28,21 +29,21 @@ nav a .ch-check.done { opacity:1; }
 .progress-fill { height:100%; background:var(--accent); width:0%; transition:width .5s; }
 .progress-label { font-size:.75rem; color:var(--fg2); margin-top:.3rem; text-align:center; }
 /* MAIN */
-main { margin-left:260px; flex:1; padding:2rem; max-width:960px; }
+main { margin-left:260px; flex:1; padding:2rem; max-width:960px; background:#fff; border-radius:14px; margin-top:1rem; margin-bottom:1rem; box-shadow:var(--shadow); }
 section { display:none; }
 section.active { display:block; animation: fadeIn .3s; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 h2 { color:var(--accent2); font-size:1.6rem; margin-bottom:1rem; border-bottom:2px solid var(--accent); padding-bottom:.4rem; }
-h3 { color:var(--accent); margin:1.2rem 0 .5rem; font-size:1.15rem; }
+h3 { color:var(--accent2); margin:1.2rem 0 .5rem; font-size:1.15rem; }
 p, li { margin-bottom:.5rem; }
 ul { padding-left:1.5rem; }
 /* COMPONENTS */
-.theory { background:var(--bg3); border-left:4px solid var(--accent); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin:1rem 0; }
-.theory .formula { font-size:1.3rem; text-align:center; padding:.5rem; color:var(--accent2); font-weight:600; }
-.warn-box { background:#2a1a00; border-left:4px solid var(--warn); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin:1rem 0; color:#ffe0b2; }
+.theory { background:#f8f9fa; border-left:4px solid var(--accent2); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin:1rem 0; }
+.theory .formula { font-size:1.3rem; text-align:center; padding:.5rem; color:var(--accent2); font-weight:600; background:#fff; border-radius:6px; margin:.4rem 0; }
+.warn-box { background:#fef9e7; border-left:4px solid var(--warn); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin:1rem 0; color:#7d6608; }
 .input-group { display:flex; flex-wrap:wrap; gap:.8rem; align-items:center; margin:.8rem 0; }
 .input-group label { min-width:80px; font-weight:600; color:var(--fg2); }
-.input-group input[type=number], .input-group input[type=text] { width:100px; padding:.4rem .6rem; background:var(--bg); border:1px solid var(--fg2); color:var(--fg); border-radius:var(--radius); font-size:1rem; text-align:right; }
+.input-group input[type=number], .input-group input[type=text] { width:100px; padding:.4rem .6rem; background:#fff; border:2px solid #ddd; color:var(--fg); border-radius:var(--radius); font-size:1rem; text-align:right; }
 .input-group input:focus { border-color:var(--accent); outline:none; }
 .input-group .unit { color:var(--fg2); font-size:.9rem; margin-left:-.4rem; }
 .slider-group { display:flex; align-items:center; gap:.6rem; margin:.4rem 0; flex-wrap:wrap; }
@@ -50,52 +51,52 @@ ul { padding-left:1.5rem; }
 .slider-group input[type=range] { flex:1; min-width:120px; accent-color:var(--accent); }
 .slider-group .val { min-width:70px; text-align:right; font-family:monospace; color:var(--accent2); }
 button { padding:.5rem 1.2rem; background:var(--accent); color:#fff; border:none; border-radius:var(--radius); cursor:pointer; font-size:1rem; font-weight:600; transition:background .2s; }
-button:hover { background:var(--accent2); color:var(--bg); }
-button.secondary { background:var(--bg3); color:var(--fg2); border:1px solid var(--fg2); }
-button.secondary:hover { border-color:var(--accent); color:var(--accent); }
+button:hover { background:#c73651; }
+button.secondary { background:#f0f2f5; color:var(--accent2); border:2px solid var(--accent2); }
+button.secondary:hover { background:var(--accent2); color:#fff; }
 .result { margin:1rem 0; padding:.8rem 1rem; border-radius:var(--radius); font-family:monospace; font-size:1rem; display:none; }
 .result.show { display:block; }
-.result.ok { background:#1b3a1b; border:1px solid var(--ok); color:var(--ok); }
-.result.err { background:#3a1b1b; border:1px solid var(--err); color:var(--err); }
-.result.info { background:var(--bg3); border:1px solid var(--fg2); color:var(--fg); }
+.result.ok { background:#eafaf1; border:1px solid var(--ok); color:#1e8449; }
+.result.err { background:#fdedec; border:1px solid var(--err); color:var(--err); }
+.result.info { background:#f8f9fa; border:1px solid #ddd; color:var(--fg); }
 .result-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:.5rem; }
-.result-grid .item { background:var(--bg2); padding:.5rem .8rem; border-radius:var(--radius); }
+.result-grid .item { background:#f8f9fa; padding:.5rem .8rem; border-radius:var(--radius); border:1px solid #eee; }
 .result-grid .item .lbl { font-size:.8rem; color:var(--fg2); }
-.result-grid .item .val { font-size:1.1rem; color:var(--accent2); font-family:monospace; }
+.result-grid .item .val { font-size:1.1rem; color:var(--accent2); font-family:monospace; font-weight:700; }
 /* SVG */
 svg.circuit { width:100%; max-width:500px; display:block; margin:1rem auto; }
-svg.circuit text { fill:var(--fg); font-family:'Segoe UI',system-ui,sans-serif; font-size:14px; }
-svg.circuit .wire { stroke:var(--fg2); stroke-width:2; fill:none; }
-svg.circuit .resistor { stroke:var(--accent2); stroke-width:2.5; fill:none; }
-svg.circuit .source { stroke:var(--warn); stroke-width:2.5; fill:none; }
+svg.circuit text { fill:#333; font-family:'Segoe UI',system-ui,sans-serif; font-size:14px; }
+svg.circuit .wire { stroke:#333; stroke-width:2.5; fill:none; }
+svg.circuit .resistor { stroke:#333; stroke-width:2.5; fill:#fff; }
+svg.circuit .source { stroke:#333; stroke-width:2.5; fill:none; }
 svg.circuit .node-dot { fill:var(--accent); }
 svg.circuit .arrow { fill:var(--accent); stroke:none; }
-svg.circuit .current-dot { fill:var(--warn); }
+svg.circuit .current-dot { fill:var(--accent); }
 /* flow animation */
 @keyframes flowRight { from{stroke-dashoffset:20} to{stroke-dashoffset:0} }
 @keyframes flowLeft { from{stroke-dashoffset:-20} to{stroke-dashoffset:0} }
-svg.circuit .flow { stroke-dasharray:4 16; stroke-width:3; stroke:var(--warn); opacity:.6; animation: flowRight 1s linear infinite; }
+svg.circuit .flow { stroke-dasharray:4 16; stroke-width:3; stroke:var(--accent); opacity:.4; animation: flowRight 1s linear infinite; }
 /* TABLES */
 table.eq-table { border-collapse:collapse; margin:.8rem 0; width:100%; }
 table.eq-table th, table.eq-table td { border:1px solid var(--bg3); padding:.4rem .6rem; text-align:center; }
-table.eq-table th { background:var(--bg3); color:var(--accent2); font-weight:600; }
-table.eq-table input { width:70px; padding:.3rem; background:var(--bg); border:1px solid var(--fg2); color:var(--fg); border-radius:4px; text-align:center; font-size:.95rem; }
+table.eq-table th { background:#f0f2f5; color:var(--accent2); font-weight:600; }
+table.eq-table input { width:70px; padding:.3rem; background:#fff; border:2px solid #ddd; color:var(--fg); border-radius:4px; text-align:center; font-size:.95rem; }
 table.eq-table input:focus { border-color:var(--accent); outline:none; }
-table.eq-table input.ok { border-color:var(--ok); background:#1b3a1b; }
-table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
+table.eq-table input.ok { border-color:var(--ok); background:#eafaf1; }
+table.eq-table input.err { border-color:var(--err); background:#fdedec; }
 /* interactive step */
-.step-box { background:var(--bg2); border:1px solid var(--bg3); border-radius:var(--radius); padding:1rem; margin:.8rem 0; }
+.step-box { background:#f8f9fa; border:2px solid #ddd; border-radius:var(--radius); padding:1rem; margin:.8rem 0; }
 .step-box.current { border-color:var(--accent); }
-.step-box h4 { color:var(--accent); margin-bottom:.4rem; }
+.step-box h4 { color:var(--accent2); margin-bottom:.4rem; }
 .choice-btns { display:flex; flex-wrap:wrap; gap:.5rem; margin:.5rem 0; }
 .choice-btns button { font-size:.9rem; padding:.4rem .8rem; }
-.choice-btns button.selected { background:var(--accent2); color:var(--bg); }
+.choice-btns button.selected { background:var(--accent2); color:#fff; }
 /* highlight for SVG interactive */
-.highlight { stroke:var(--warn)!important; stroke-width:3.5!important; }
-.highlight-fill { fill:var(--warn)!important; opacity:.3; }
+.highlight { stroke:var(--accent)!important; stroke-width:3.5!important; }
+.highlight-fill { fill:var(--accent)!important; opacity:.2; }
 /* CAS box */
-.cas-box { background:#1a1a2e; border:1px solid #5c6bc0; border-radius:var(--radius); padding:.8rem 1rem; margin:.8rem 0; font-family:monospace; color:#9fa8da; white-space:pre-wrap; font-size:.9rem; }
-.cas-box .cas-label { color:#5c6bc0; font-weight:700; font-family:sans-serif; font-size:.8rem; margin-bottom:.3rem; }
+.cas-box { background:#f0f2f5; border:2px solid var(--accent2); border-radius:var(--radius); padding:.8rem 1rem; margin:.8rem 0; font-family:monospace; color:#333; white-space:pre-wrap; font-size:.9rem; }
+.cas-box .cas-label { color:var(--accent2); font-weight:700; font-family:sans-serif; font-size:.8rem; margin-bottom:.3rem; }
 /* RESPONSIVE */
 @media(max-width:800px){
   nav { transform:translateX(-260px); }
@@ -106,7 +107,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 /* Kirchhoff node/mesh selector */
 .node-sel, .mesh-sel { display:inline-block; padding:.3rem .7rem; margin:.2rem; border:2px solid var(--fg2); border-radius:var(--radius); cursor:pointer; transition:all .2s; }
 .node-sel:hover, .mesh-sel:hover { border-color:var(--accent); }
-.node-sel.active, .mesh-sel.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+.node-sel.active, .mesh-sel.active { border-color:var(--accent2); background:var(--accent2); color:#fff; }
 /* Equation input row */
 .eq-row { display:flex; align-items:center; gap:.4rem; margin:.5rem 0; flex-wrap:wrap; font-family:monospace; font-size:1.05rem; }
 .eq-row input { width:60px; }
@@ -174,22 +175,22 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 <h3>Werte einstellen</h3>
 <div class="slider-group">
   <label>R₁:</label>
-  <input type="range" min="10" max="1000" value="100" step="10" id="par-r1" oninput="parCalc()">
+  <input type="range" min="10" max="1000" value="100" step="1" id="par-r1" oninput="parCalc()">
   <span class="val" id="par-r1-val">100 Ω</span>
 </div>
 <div class="slider-group">
   <label>R₂:</label>
-  <input type="range" min="10" max="1000" value="220" step="10" id="par-r2" oninput="parCalc()">
+  <input type="range" min="10" max="1000" value="220" step="1" id="par-r2" oninput="parCalc()">
   <span class="val" id="par-r2-val">220 Ω</span>
 </div>
 <div class="slider-group">
   <label>R₃:</label>
-  <input type="range" min="10" max="1000" value="330" step="10" id="par-r3" oninput="parCalc()">
+  <input type="range" min="10" max="1000" value="330" step="1" id="par-r3" oninput="parCalc()">
   <span class="val" id="par-r3-val">330 Ω</span>
 </div>
 <div class="slider-group">
   <label>U:</label>
-  <input type="range" min="1" max="30" value="12" step="0.5" id="par-u" oninput="parCalc()">
+  <input type="range" min="1" max="30" value="12" step="0.1" id="par-u" oninput="parCalc()">
   <span class="val" id="par-u-val">12 V</span>
 </div>
 
@@ -445,15 +446,15 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <h3 style="margin-top:.8rem">Vorzeichen der Spannung an einem Widerstand</h3>
   <p>An jedem Widerstand fällt eine Spannung <em>U = R · I</em> ab. Die Richtung des Spannungsabfalls ist <strong>immer gleich</strong> der festgelegten Stromrichtung (von + nach −).</p>
   <ul>
-    <li>Gehst du <strong>in Stromrichtung</strong> durch den Widerstand → du gehst von + nach −<br>→ die Spannung wird <strong>abgezogen</strong> (Spannungsabfall): <strong>−R·I</strong></li>
-    <li>Gehst du <strong>gegen die Stromrichtung</strong> → du gehst von − nach +<br>→ die Spannung wird <strong>addiert</strong> (Spannungsanstieg): <strong>+R·I</strong></li>
+    <li>Gehen Sie <strong>in Stromrichtung</strong> durch den Widerstand → Sie gehen von + nach −<br>→ die Spannung wird <strong>abgezogen</strong> (Spannungsabfall): <strong>−R·I</strong></li>
+    <li>Gehen Sie <strong>gegen die Stromrichtung</strong> → Sie gehen von − nach +<br>→ die Spannung wird <strong>addiert</strong> (Spannungsanstieg): <strong>+R·I</strong></li>
   </ul>
   
   <h3 style="margin-top:.8rem">Vorzeichen der Spannungsquelle</h3>
   <p>Bei einer Spannungsquelle ist die Polarität fest (+ und − Pol):</p>
   <ul>
-    <li>Gehst du im Umlauf <strong>von − nach +</strong> (durch die Quelle „aufwärts")<br>→ Spannungsanstieg: <strong>+U₀</strong></li>
-    <li>Gehst du im Umlauf <strong>von + nach −</strong> (durch die Quelle „abwärts")<br>→ Spannungsabfall: <strong>−U₀</strong></li>
+    <li>Gehen Sie im Umlauf <strong>von − nach +</strong> (durch die Quelle „aufwärts")<br>→ Spannungsanstieg: <strong>+U₀</strong></li>
+    <li>Gehen Sie im Umlauf <strong>von + nach −</strong> (durch die Quelle „abwärts")<br>→ Spannungsabfall: <strong>−U₀</strong></li>
   </ul>
 
   <h3 style="margin-top:.8rem">Einfaches Beispiel: Eine Masche mit Quelle und zwei Widerständen</h3>
@@ -506,31 +507,31 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 
   <p>Umlauf im Uhrzeigersinn, Start bei der Quelle (unten links):</p>
   <ol>
-    <li><strong>U₀:</strong> Wir gehen von − nach + durch die Quelle → Spannungs<em>anstieg</em> → <strong style="color:var(--ok)">+U₀</strong></li>
-    <li><strong>R₁:</strong> Wir gehen von + nach − (in Stromrichtung) → Spannungs<em>abfall</em> → <strong style="color:var(--err)">−R₁·I</strong></li>
-    <li><strong>R₂:</strong> Wir gehen von + nach − (in Stromrichtung) → Spannungs<em>abfall</em> → <strong style="color:var(--err)">−R₂·I</strong></li>
+    <li><strong>U₀:</strong> Man geht von − nach + durch die Quelle → Spannungs<em>anstieg</em> → <strong style="color:var(--ok)">+U₀</strong></li>
+    <li><strong>R₁:</strong> Man geht von + nach − (in Stromrichtung) → Spannungs<em>abfall</em> → <strong style="color:var(--err)">−R₁·I</strong></li>
+    <li><strong>R₂:</strong> Man geht von + nach − (in Stromrichtung) → Spannungs<em>abfall</em> → <strong style="color:var(--err)">−R₂·I</strong></li>
   </ol>
   <div class="formula">+U₀ − R₁·I − R₂·I = 0 &nbsp; ⟺ &nbsp; U₀ = R₁·I + R₂·I = (R₁+R₂)·I</div>
-  <p style="color:var(--fg2);font-size:.9rem"><em>Das kennt ihr schon — es ist einfach das ohmsche Gesetz für eine Reihenschaltung! Die Maschenregel ist die Verallgemeinerung davon.</em></p>
+  <p style="color:var(--fg2);font-size:.9rem"><em>Das kennen Sie bereits — es ist einfach das ohmsche Gesetz für eine Reihenschaltung! Die Maschenregel ist die Verallgemeinerung davon.</em></p>
 
   <h3 style="margin-top:.8rem">Anwendung auf die Wheatstone-Brücke: Masche M1 (A→B→D→A)</h3>
   <p>Umlaufrichtung: A → B → D → zurück zur Quelle → A</p>
   <ol>
-    <li><strong>R₁ (A→B):</strong> Strom I₁ fließt A→B, wir gehen A→B = <em>in Stromrichtung</em> → <strong style="color:var(--err)">−R₁·I₁</strong></li>
-    <li><strong>R₃ (B→D):</strong> Strom I₃ fließt B→D, wir gehen B→D = <em>in Stromrichtung</em> → <strong style="color:var(--err)">−R₃·I₃</strong></li>
-    <li><strong>U₀ (D→A über Quelle):</strong> Wir gehen von − nach + → <strong style="color:var(--ok)">+U₀</strong></li>
+    <li><strong>R₁ (A→B):</strong> Strom I₁ fließt A→B, man geht A→B = <em>in Stromrichtung</em> → <strong style="color:var(--err)">−R₁·I₁</strong></li>
+    <li><strong>R₃ (B→D):</strong> Strom I₃ fließt B→D, man geht B→D = <em>in Stromrichtung</em> → <strong style="color:var(--err)">−R₃·I₃</strong></li>
+    <li><strong>U₀ (D→A über Quelle):</strong> Man geht von − nach + → <strong style="color:var(--ok)">+U₀</strong></li>
   </ol>
   <div class="formula">+U₀ − R₁·I₁ − R₃·I₃ = 0 &nbsp; ⟺ &nbsp; U₀ = R₁·I₁ + R₃·I₃</div>
 </div>
 
 <div class="warn-box">
   <strong>⚠️ Häufiger Fehler: Vorzeichenkonvention!</strong><br>
-  Lege <strong>zuerst</strong> alle Stromrichtungen fest (beliebig, aber dann <strong>konsistent</strong> bleiben!). Wenn das Ergebnis negativ wird, fließt der Strom eben andersrum. Das ist kein Fehler!<br><br>
+  Legen Sie <strong>zuerst</strong> alle Stromrichtungen fest (beliebig, aber dann <strong>konsistent</strong> bleiben!). Wenn das Ergebnis negativ wird, fließt der Strom eben andersrum. Das ist kein Fehler!<br><br>
   <strong>Typischer Fehler:</strong> Stromrichtung in der Knotengleichung anders definieren als in der Maschengleichung → Widerspruch!
 </div>
 
 <h3>Unsere Stromrichtungen (Konvention)</h3>
-<p>Wir definieren für die Wheatstone-Brücke:</p>
+<p>Für die Wheatstone-Brücke definiert man:</p>
 <ul>
   <li><strong>I₁</strong>: A → B (durch R₁)</li>
   <li><strong>I₂</strong>: A → C (durch R₂)</li>
@@ -540,7 +541,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 </ul>
 
 <h3>Knotenregel anwenden</h3>
-<p>Wähle einen Knoten und trage die Gleichung ein:</p>
+<p>Wählen Sie einen Knoten und tragen Sie die Gleichung ein:</p>
 <div style="margin:.5rem 0">
   <span class="node-sel active" onclick="selNode(this,'A')" id="node-A">A</span>
   <span class="node-sel" onclick="selNode(this,'B')" id="node-B">B</span>
@@ -548,7 +549,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
   <span class="node-sel" onclick="selNode(this,'D')" id="node-D">D</span>
 </div>
 <div id="node-hint" class="theory" style="font-size:.9rem"></div>
-<p style="margin-top:.5rem">Trage die Knotengleichung ein (z.B. <code>I1+I2=I0</code> oder <code>I1-I3-I5=0</code>):</p>
+<p style="margin-top:.5rem">Tragen Sie die Knotengleichung ein (z.B. <code>I1+I2=I0</code> oder <code>I1-I3-I5=0</code>):</p>
 <div class="input-group">
   <input type="text" id="node-eq" style="width:250px;text-align:left" placeholder="z.B. I1-I3-I5=0">
   <button onclick="checkNodeEq()">Prüfen</button>
@@ -556,14 +557,14 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 <div class="result" id="node-eq-result"></div>
 
 <h3>Maschenregel anwenden</h3>
-<p>Wähle eine Masche:</p>
+<p>Wählen Sie eine Masche:</p>
 <div style="margin:.5rem 0">
   <span class="mesh-sel active" onclick="selMesh(this,'M1')" id="mesh-M1">M1: A→B→D→A</span>
   <span class="mesh-sel" onclick="selMesh(this,'M2')" id="mesh-M2">M2: A→C→D→A</span>
   <span class="mesh-sel" onclick="selMesh(this,'M3')" id="mesh-M3">M3: B→C→D→B</span>
 </div>
 <div id="mesh-hint" class="theory" style="font-size:.9rem"></div>
-<p style="margin-top:.5rem">Trage die Maschengleichung ein (z.B. <code>U0-R1*I1-R3*I3=0</code>):</p>
+<p style="margin-top:.5rem">Tragen Sie die Maschengleichung ein (z.B. <code>U0-R1*I1-R3*I3=0</code>):</p>
 <div class="input-group">
   <input type="text" id="mesh-eq" style="width:300px;text-align:left" placeholder="z.B. U0-R1*I1-R3*I3=0">
   <button onclick="checkMeshEq()">Prüfen</button>
@@ -579,7 +580,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 </div>
 <div class="result" id="sign-quiz-result"></div>
 <div class="result info" id="sign-explain" style="display:none">
-  <strong>Erklärung:</strong> I₅ fließt B→C. Die Masche M3 geht B→C→D→B. Im Abschnitt B→C ist die Umlaufrichtung <em>gleich</em> der Stromrichtung. Also ist der Spannungsabfall +R₅·I₅. Aber in der Maschengleichung muss die Summe aller Spannungen Null ergeben, d.h. wir subtrahieren Spannungsabfälle:<br>
+  <strong>Erklärung:</strong> I₅ fließt B→C. Die Masche M3 geht B→C→D→B. Im Abschnitt B→C ist die Umlaufrichtung <em>gleich</em> der Stromrichtung. Also ist der Spannungsabfall +R₅·I₅. Aber in der Maschengleichung muss die Summe aller Spannungen Null ergeben, d.h. Spannungsabfälle werden subtrahiert:<br>
   <strong>−R₅·I₅ − R₄·I₄ + R₃·I₃ = 0</strong><br>
   Alternativ: <strong>R₅·I₅ + R₄·I₄ = R₃·I₃</strong><br><br>
   Achtung: Je nach Umlaufrichtung ändert sich das Vorzeichen. Entscheidend ist die <strong>Konsistenz</strong>!
@@ -596,7 +597,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
     <li>2 Knotengleichungen (z.B. Knoten B und C)</li>
     <li>3 Maschengleichungen (z.B. M1, M2, M3)</li>
   </ul>
-  <p>Aber: Nur 2 Knoten + 2 Maschen + 1 weitere Beziehung sind unabhängig. Wir verwenden 3 Maschen (eine ist redundant als Check).</p>
+  <p>Aber: Nur 2 Knoten + 2 Maschen + 1 weitere Beziehung sind unabhängig. Es werden 3 Maschen verwendet (eine ist redundant als Check).</p>
 </div>
 
 <h3>Die 5 Gleichungen (Default-Werte)</h3>
@@ -610,7 +611,7 @@ table.eq-table input.err { border-color:var(--err); background:#3a1b1b; }
 </div>
 
 <h3>Koeffizienten-Matrix eingeben</h3>
-<p>Trage die Koeffizienten ein. Format: <code>a₁·I₁ + a₂·I₂ + a₃·I₃ + a₄·I₄ + a₅·I₅ = b</code></p>
+<p>Tragen Sie die Koeffizienten ein. Format: <code>a₁·I₁ + a₂·I₂ + a₃·I₃ + a₄·I₄ + a₅·I₅ = b</code></p>
 <table class="eq-table" id="eq-table">
   <tr><th></th><th>I₁</th><th>I₂</th><th>I₃</th><th>I₄</th><th>I₅</th><th>=</th><th>b</th></tr>
   <tr><td>Knoten B</td><td><input id="eq00" value="1"></td><td><input id="eq01" value="0"></td><td><input id="eq02" value="-1"></td><td><input id="eq03" value="0"></td><td><input id="eq04" value="-1"></td><td>=</td><td><input id="eq05" value="0"></td></tr>
@@ -663,7 +664,7 @@ Variablen: i1,i2,i3,i4,i5
 <h2>6 · Freier Rechner</h2>
 
 <div class="theory">
-  <p>Gib eigene Werte ein und berechne sofort alle Ströme, Spannungen und R<sub>ges</sub> der Wheatstone-Brücke.</p>
+  <p>Geben Sie eigene Werte ein und berechne sofort alle Ströme, Spannungen und R<sub>ges</sub> der Wheatstone-Brücke.</p>
 </div>
 
 <svg class="circuit" viewBox="-90 0 500 360" id="svg-calc">
@@ -832,7 +833,7 @@ let mixStep = 1;
 function mixChoice(step, choice) {
   if(step!==1) return;
   const ok = choice==='r2r3';
-  showResult('mix-step1-result', ok, ok ? 'Richtig! R₂ und R₃ liegen parallel.' : 'Falsch – schau dir an, welche Widerstände die gleichen Knoten teilen.');
+  showResult('mix-step1-result', ok, ok ? 'Richtig! R₂ und R₃ liegen parallel.' : 'Falsch – schauen Sie sich an, welche Widerstände die gleichen Knoten teilen.');
   if(ok) { document.getElementById('mix-step2').style.opacity='1'; mixStep=2; }
 }
 function mixCheck2() {
@@ -905,7 +906,7 @@ function checkNodeEq() {
   }
   else if(currentNode==='A') {
     // I1+I2 on left → not easily checkable without I0, just accept common forms
-    showResult('node-eq-result',true,'Für Knoten A verwenden wir I₀ = I₁ + I₂. Da I₀ keine unserer 5 Unbekannten ist, nutzen wir lieber Knoten B und C!');
+    showResult('node-eq-result',true,'Für Knoten A verwenden wir I₀ = I₁ + I₂. Da I₀ keine unserer 5 Unbekannten ist, nutzen Sie lieber Knoten B und C!');
     return;
   }
   else if(currentNode==='D') {
@@ -935,7 +936,7 @@ function checkMeshEq() {
   if(!input) return;
   // Simple validation: just show the correct answer
   const correct = meshInfo[currentMesh].hint;
-  showResult('mesh-eq-result', true, 'Korrekte Form: ' + correct + '<br>Vergleiche mit deiner Eingabe!');
+  showResult('mesh-eq-result', true, 'Korrekte Form: ' + correct + '<br>Vergleichen Sie mit Ihrer Eingabe!');
 }
 
 function signQuiz(btn, ok) {
@@ -944,7 +945,7 @@ function signQuiz(btn, ok) {
   // Wait, let me reconsider. If going B→C and current is B→C, voltage drops: U_R5 = -R5*I5 in KVL
   // Actually the convention: going WITH current direction = voltage drop = subtract
   // So −R₅·I₅ is correct
-  showResult('sign-quiz-result', ok, ok ? 'Richtig! Wenn Umlauf- und Stromrichtung übereinstimmen, ist es ein Spannungsabfall — er wird in der Maschengleichung subtrahiert.' : 'Nicht ganz – denk daran: Umlaufrichtung = Stromrichtung → Spannungsabfall → negatives Vorzeichen in der Maschengleichung.');
+  showResult('sign-quiz-result', ok, ok ? 'Richtig! Wenn Umlauf- und Stromrichtung übereinstimmen, ist es ein Spannungsabfall — er wird in der Maschengleichung subtrahiert.' : 'Nicht ganz – denken Sie daran: Umlaufrichtung = Stromrichtung → Spannungsabfall → negatives Vorzeichen in der Maschengleichung.');
   document.getElementById('sign-explain').style.display = ok ? 'block' : 'none';
   if(ok) markDone(3);
 }
